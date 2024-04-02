@@ -16,6 +16,7 @@
 	String errMsg = request.getParameter("errMsg");
 	String logoutMsg = request.getParameter("logoutMsg");
 	
+	
 %>
 <!DOCTYPE html>
 <html>
