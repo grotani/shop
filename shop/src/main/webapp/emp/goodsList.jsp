@@ -74,7 +74,7 @@
 	System.out.println(categoryList);
 	
 	// goods 목록 리스트  
-	String sql2 = "select category, goods_title goodsTitle, goods_content goodsContent, goods_price goodsPrice, goods_amount goodsAmount, update_date updateDate from goods where category = ? limit ?,?";
+	String sql2 = "select category, goods_title goodsTitle, goods_price goodsPrice from goods where category = ? limit ?,?";
 		
 	PreparedStatement stmt2 = null;
 	ResultSet rs2 = null;
@@ -90,14 +90,11 @@
 		HashMap<String,Object> m2 = new HashMap<String,Object>();
 		m2.put("category", rs2.getString("category"));
 		m2.put("goodsTitle", rs2.getString("goodsTitle"));
-		m2.put("goodsContent", rs2.getString("goodsContent"));
 		m2.put("goodsPrice", rs2.getInt("goodsPrice"));
-		m2.put("goodsAmount", rs2.getInt("goodsAmount"));
-		m2.put("updateDate", rs2.getString("updateDate"));
 		list.add(m2);
 	}
 	// 카테고리가 null 일때
-	String sql3 = "select category, goods_title goodsTitle, goods_content goodsContent, goods_price goodsPrice, goods_amount goodsAmount, update_date updateDate from goods limit ?,?";
+	String sql3 = "select category, goods_title goodsTitle, goods_price goodsPrice from goods limit ?,?";
 	PreparedStatement stmt3 = null;
 	ResultSet rs3 = null;
 	stmt3 = conn.prepareStatement(sql3);
@@ -111,10 +108,7 @@
 		HashMap<String,Object> m3 = new HashMap<String,Object>();
 		m3.put("category", rs3.getString("category"));
 		m3.put("goodsTitle", rs3.getString("goodsTitle"));
-		m3.put("goodsContent", rs3.getString("goodsContent"));
 		m3.put("goodsPrice", rs3.getInt("goodsPrice"));
-		m3.put("goodsAmount", rs3.getInt("goodsAmount"));
-		m3.put("updateDate", rs3.getString("updateDate"));
 		list2.add(m3);
 	}
 
@@ -159,12 +153,10 @@
 		<h1>goods목록</h1>
 		<table>
 			<tr>
+				<td>imge</td>
 				<td>category</td>
 				<td>goodsTitle</td>
-				<td>goodsContent</td>
-				<td>goodsPrice</td>
-				<td>goodsAmount</td>
-				<td>updateDate</td>
+				<td>goodsPrice</td>			
 			</tr>
 			
 			<%
@@ -172,12 +164,16 @@
 					for(HashMap<String,Object> m3 : list2) {
 			%>	
 				<tr>
-					<td><%= m3.get("category") %></td>
+					
+                  <td>
+                     <a href="/shop/emp/goodsOne.jsp">
+                        <img src="/shop/emp/img/tue.png" width="200px;">
+                     </a>
+                  </td>
+                  	<td><%= m3.get("category") %></td>
 					<td><%= m3.get("goodsTitle") %></td>
-					<td><%= m3.get("goodsContent") %></td>
 					<td><%= m3.get("goodsPrice") %></td>
-					<td><%= m3.get("goodsAmount") %></td>
-					<td><%= m3.get("updateDate") %></td>
+					
 				</tr>
 				<%
 					} 
@@ -185,12 +181,14 @@
 					for(HashMap<String,Object> m2 : list) {
 				%>
 				<tr>
-					<td><%= m2.get("category") %></td>
+					<td>
+                     <a href="/shop/emp/goodsOne.jsp">
+                        <img src="/shop/emp/img/tue.png" width="200px;">
+                     </a>
+                 	</td>
+                 	<td><%= m2.get("category") %></td>
 					<td><%= m2.get("goodsTitle") %></td>
-					<td><%= m2.get("goodsContent") %></td>
 					<td><%= m2.get("goodsPrice") %></td>
-					<td><%= m2.get("goodsAmount") %></td>
-					<td><%= m2.get("updateDate") %></td>
 				</tr>
 				<%		
 					}
