@@ -1,6 +1,7 @@
 <%@page import="java.net.URLEncoder"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.sql.*"%>
+<%@ page import="java.util.*"%>
 <%
 	// 인증분기 : 세션 변수 이름 = > loginEmp
 	if(session.getAttribute("loginEmp") != null) { 
@@ -21,7 +22,7 @@
 	From emp
 	where active='ON' and emp_id = ? And emp_pw = password(?)
 	*/
-	String sql = "select emp_id empId From emp where active='ON' and emp_id=? And emp_pw=password(?)";
+	String sql = "select emp_id empId, emp_name empName, grade From emp where active='ON' and emp_id=? And emp_pw=password(?)";
 	Class.forName("org.mariadb.jdbc.Driver");
 	Connection conn = null;
 	conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/shop","root","java1234");
@@ -39,9 +40,23 @@
 	*/
 	
 	if(rs.next()) {
-		System.out.println("로그인 성공!");
+		System.out.println("로그인 성공!"); 
+		// 하나의 세션 변수안에 여러개의 값을 저장하기 위해서 Hasp
+		HashMap<String,Object> loginEmp = new HashMap<String,Object>();
+		loginEmp.put("empId", rs.getString("empId"));
+		loginEmp.put("empName", rs.getString("empName"));
+		loginEmp.put("grade", rs.getInt("grade"));
 		
-		session.setAttribute("loginEmp", rs.getString("empId"));
+		
+		session.setAttribute("loginEmp", loginEmp);
+		
+		// 디버깅 (loginEmp 세션변수)
+		HashMap<String, Object> m = (HashMap<String, Object>)(session.getAttribute("loginEmp"));
+		System.out.println((String)m.get("empId")); // 로그인된 empId
+		System.out.println((String)m.get("empName")); // 로그인된 empName
+		System.out.println((Integer)m.get("grade")); // 로그인된 grade
+		
+		
 		response.sendRedirect("/shop/emp/empList.jsp");
 	
 	} else {

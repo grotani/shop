@@ -23,8 +23,21 @@
 <head>
 	<meta charset="UTF-8">
 	<title></title>
+	<style>
+		/* 폰트설정 학교안심 몽글몽글 */
+		@font-face {
+		    font-family: 'TTHakgyoansimMonggeulmonggeulR';
+		    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2402_keris@1.0/TTHakgyoansimMonggeulmonggeulR.woff2') format('woff2');
+		    font-weight: normal;
+		    font-style: normal;
+		}
+		.font {
+			font-family:'TTHakgyoansimMonggeulmonggeulR';
+		}
+			
+	</style>
 </head>
-<body>
+<body class="font">
 	<h1>로그인</h1>
 	
 	<%
