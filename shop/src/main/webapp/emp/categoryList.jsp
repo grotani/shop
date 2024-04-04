@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.sql.*"%>
 <%@ page import="java.util.*"%>
+<!-- Control Layer -->
 <%
 	// 인증분기 : 세션 변수 이름 = > loginEmp
 	if(session.getAttribute("loginEmp") == null) { 
@@ -8,27 +9,31 @@
 		return;
 	}	
 %>
-<!-- Model Layer -->
+
 <%
+	// DB연결
 	Class.forName("org.mariadb.jdbc.Driver");
 	Connection conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/shop","root","java1234");
 	
-	String sql1 = "select category from category";
-	PreparedStatement stmt1 = null;
-	ResultSet rs1= null;
-	stmt1 = conn.prepareStatement(sql1);
-	rs1 = stmt1.executeQuery();
 	
-	ArrayList<String> categoryList = 
-		new ArrayList<String>();
-	while(rs1.next()) {
-		categoryList.add(rs1.getString("category"));
-		
+	// 카테고리 리스트
+	String category = request.getParameter("category");
+	String sql = "SELECT category, create_date createDate FROM category";
+	PreparedStatement stmt = null;
+	ResultSet rs = null;
+	stmt = conn.prepareStatement(sql);
+	rs = stmt.executeQuery();
+	
+	ArrayList<HashMap<String,Object>> list
+	= new ArrayList<HashMap<String,Object>>();
+	while(rs.next()) {
+		HashMap<String, Object> m = new HashMap<String, Object>();
+		m.put("category",rs.getString("category"));
+		m.put("createDate",rs.getString("createDate"));
+		list.add(m);
 	}
-	// 디버깅 
-	System.out.println(categoryList);
+	
 %>
-<!-- View Layer -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -51,50 +56,31 @@
 		}
 			
 	</style>
-
 </head>
-<body class="container font">
-	<!-- 메인메뉴  -->
-	<div>
-	<jsp:include page="/emp/inc/empMenu.jsp"></jsp:include>	</div>
-	
-	
-	<h1>상품등록</h1>
-	<form method="post" action="/shop/emp/addGoodsAction.jsp">
-		<div>
-			category
-			<select name="category">
-				<option value="">선택</option>
-				<%
-					for(String c : categoryList) {
-				%>
-					<option value="<%=c%>"><%=c%></option>
-				<% 		
-					}
-				%>
-			</select>
-		</div>
-		<!-- emp_id 값은 action쪽에서 세션변수에서 바인딩  -->
-		<table>
+<body  class="container font">
+<!-- empMenu.jsp include : 주제(서버) vs redirect (주체:클라이언트) -->
+<!-- 주체가 서버이기에 include 할때 절대 주소가 /shop/ 부터 시작하지 않음 -->
+<jsp:include page="/emp/inc/empMenu.jsp"></jsp:include>
+<div class= "d-flex justify-content-end">
+	<a href="/shop/emp/addCategoryForm.jsp">category 추가</a>
+	<a href="/shop/emp/deleteCategoryForm.jsp?category=<%=category%>">category 삭제</a>
+</div >
+	<h1>Category List</h1>
+	<table class="table border">
 		<tr>
-			<td>goodsTitle :</td>
-			<td><input type="text" name="goodsTitle"></td>
+			<th>category</th>
+			<th>createDate</th>
 		</tr>
-		<tr>
-			<td>goodsPrice :</td>
-			<td><input type="number" name="goodsPrice"></td>
-		</tr>
-		<tr>
-			<td>goodsAmount :</td>
-			<td><input type="number" name="goodsAmount"></td>
-		</tr>
-		<tr>
-			<td>goodsContent :</td>
-			<td><textarea rows="5" cols="50" name="goodsContent"></textarea></td>
-		</tr>
-		</table>
-			<button type="submit">삼풍등록</button>
-		
-	</form>
+		<%
+			for(HashMap<String, Object> m : list) {
+		%>
+			<tr>
+				<td><%=(String)(m.get("category"))%></td>
+				<td><%=(String)(m.get("createDate"))%></td>
+			</tr>
+		<% 		
+			}
+		%>
+	</table>
 </body>
 </html>

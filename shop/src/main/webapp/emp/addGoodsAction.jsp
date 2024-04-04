@@ -10,7 +10,7 @@
 		return;
 	}	
 %>
-<!-- 세션 성정값  : 입력시 로그인 emp의 emp_id 값이 필요해서 -->
+<!-- 세션 설정값  : 입력시 로그인 emp의 emp_id 값이 필요해서 -->
 <%
 	HashMap<String,Object> loginMember 
 		= (HashMap<String,Object>)(session.getAttribute("loginEmp"));
