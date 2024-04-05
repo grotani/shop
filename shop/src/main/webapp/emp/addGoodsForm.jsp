@@ -13,6 +13,7 @@
 	Class.forName("org.mariadb.jdbc.Driver");
 	Connection conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/shop","root","java1234");
 	
+	
 	String sql1 = "select category from category";
 	PreparedStatement stmt1 = null;
 	ResultSet rs1= null;
@@ -60,7 +61,8 @@
 	
 	
 	<h1>상품등록</h1>
-	<form method="post" action="/shop/emp/addGoodsAction.jsp">
+	<form method="post" action="/shop/emp/addGoodsAction.jsp"
+			enctype="multipart/form-data">
 		<div>
 			category
 			<select name="category">
@@ -81,6 +83,10 @@
 			<td><input type="text" name="goodsTitle"></td>
 		</tr>
 		<tr>
+			<td>goodsImage :</td>
+			<td><input type="file" name="goodsImg"></td>
+		</tr>
+		<tr>
 			<td>goodsPrice :</td>
 			<td><input type="number" name="goodsPrice"></td>
 		</tr>
@@ -93,7 +99,7 @@
 			<td><textarea rows="5" cols="50" name="goodsContent"></textarea></td>
 		</tr>
 		</table>
-			<button type="submit">삼풍등록</button>
+			<button type="submit">상품등록</button>
 		
 	</form>
 </body>

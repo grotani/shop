@@ -3,7 +3,7 @@
 <%
 	// 삭제요청값 
 	String category = request.getParameter("category");
-	System.out.println("category");
+	System.out.println(category);
 	//
 	
 	// 삭제쿼리 

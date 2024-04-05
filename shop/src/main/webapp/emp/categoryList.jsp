@@ -60,7 +60,9 @@
 <body  class="container font">
 <!-- empMenu.jsp include : 주제(서버) vs redirect (주체:클라이언트) -->
 <!-- 주체가 서버이기에 include 할때 절대 주소가 /shop/ 부터 시작하지 않음 -->
-<jsp:include page="/emp/inc/empMenu.jsp"></jsp:include>
+<div>
+	<jsp:include page="/emp/inc/empMenu.jsp"></jsp:include>
+</div>
 <div class= "d-flex justify-content-end">
 	<a href="/shop/emp/addCategoryForm.jsp">category 추가</a>
 	<a href="/shop/emp/deleteCategoryForm.jsp?category=<%=category%>">category 삭제</a>

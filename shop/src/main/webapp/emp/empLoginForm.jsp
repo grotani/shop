@@ -35,9 +35,10 @@
 			font-family:'TTHakgyoansimMonggeulmonggeulR';
 		}
 			
+			
 	</style>
 </head>
-<body class="font">
+<body class="font"  style="text-align: center;">
 	<h1>로그인</h1>
 	
 	<%
@@ -52,21 +53,24 @@
 	<% 		
 		} 
 	%>
-	
-	<form method="post" action="/shop/emp/empLoginAction.jsp">
-		<table>
-		<tr>
-			<td>ID:</td>
-			<td><input type="text" name="empId"></td>
-		</tr>
-		<tr>
-			<td>PW:</td> 
-			<td><input type="password" name="empPw"></td>
-		</tr>
-		
-		
-		</table>
-		<button type="submit">로그인</button>
-	</form>
+	<div style="display: flex;">
+		<div style="margin: auto;">
+		<form method="post" action="/shop/emp/empLoginAction.jsp" style="margin: 0 auto">
+			<table>
+			<tr>
+				<td>ID:</td>
+				<td><input type="text" name="empId"></td>
+			</tr>
+			<tr>
+				<td>PW:</td> 
+				<td><input type="password" name="empPw"></td>
+			</tr>
+			
+			
+			</table>
+			<button type="submit">로그인</button>
+		</form>
+		</div>
+	</div>
 </body>
 </html>

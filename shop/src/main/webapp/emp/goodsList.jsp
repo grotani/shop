@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.sql.*"%>
 <%@ page import="java.util.*"%>
+<%@ page import="java.io.*" %>
+<%@ page import="java.nio.file.*" %>
 <!-- Control Layer -->
 <%
 	// 인증분기 : 세션 변수 이름 = > loginEmp
@@ -11,22 +13,29 @@
 %>
 
 <%
+
 	// DB 연결 
 	Class.forName("org.mariadb.jdbc.Driver");
 	Connection conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/shop","root","java1234");
+	
 	
 	// 페이징 연결
 	int currentPage = 1;
 	if(request.getParameter("currentPage")!= null) {
 		currentPage = Integer.parseInt(request.getParameter("currentPage"));
 	}
-	int rowPerPage = 10;
-	int startRow = ((currentPage-1) *rowPerPage);
+	int rowPerPage = 12; // 한페이지에 보여줄 상품 개수 
+	int startRow = ((currentPage-1)*rowPerPage);
 	
-	String sqlPage = "select count(*) from goods";
+	String category = request.getParameter("category");
+	if(category == null) {
+		category = "";
+	}
+	String sqlPage = "select count(*) from goods where category like ?";
 	PreparedStatement stmtPage = null;
 	ResultSet rsPage = null;
 	stmtPage = conn.prepareStatement(sqlPage);
+	stmtPage.setString(1, "%"+category+"%");
 	rsPage = stmtPage.executeQuery();
 	int totalRow  = 0;
 	if(rsPage.next()) {
@@ -36,8 +45,7 @@
 	if(totalRow%rowPerPage != 0) {
 		lastPage = lastPage+1;
 	}
-	String category = request.getParameter("category");
-
+	
 	/*if(rsPage.next()) {
 		totalRow = rsPage.getInt("");
 	}
@@ -49,8 +57,10 @@
 		null이 아니면
 		select * from goods where category=?
 	*/
-	
-	
+	System.out.println(currentPage + "    currentPage");
+	System.out.println(lastPage + "    lastPage");
+	System.out.println(totalRow + "    totalRow");
+
 %>	
 
 <!-- Model Layer -->
@@ -74,12 +84,12 @@
 	System.out.println(categoryList);
 	
 	// goods 목록 리스트  
-	String sql2 = "select category, goods_title goodsTitle, goods_price goodsPrice from goods where category = ? limit ?,?";
+	String sql2 = "select goods_no goodsNo, category, goods_title goodsTitle, filename, goods_price goodsPrice from goods where category Like ? limit ?,?";
 		
 	PreparedStatement stmt2 = null;
 	ResultSet rs2 = null;
 	stmt2 = conn.prepareStatement(sql2);
-	stmt2.setString(1, category);
+	stmt2.setString(1,"%"+category+"%");
 	stmt2.setInt(2, startRow);
 	stmt2.setInt(3, rowPerPage);
 	rs2 = stmt2.executeQuery();
@@ -88,29 +98,15 @@
 	=new ArrayList<HashMap<String,Object>>();
 	while(rs2.next()) {
 		HashMap<String,Object> m2 = new HashMap<String,Object>();
+		m2.put("goodsNo", rs2.getString("goodsNo"));
 		m2.put("category", rs2.getString("category"));
 		m2.put("goodsTitle", rs2.getString("goodsTitle"));
+		m2.put("filename", rs2.getString("filename"));
 		m2.put("goodsPrice", rs2.getInt("goodsPrice"));
 		list.add(m2);
+		
 	}
-	// 카테고리가 null 일때
-	String sql3 = "select category, goods_title goodsTitle, goods_price goodsPrice from goods limit ?,?";
-	PreparedStatement stmt3 = null;
-	ResultSet rs3 = null;
-	stmt3 = conn.prepareStatement(sql3);
-	stmt3.setInt(1, startRow);
-	stmt3.setInt(2, rowPerPage);
-	rs3 = stmt3.executeQuery();
 	
-	ArrayList<HashMap<String,Object>> list2
-	=new ArrayList<HashMap<String,Object>>();
-	while(rs3.next()) {
-		HashMap<String,Object> m3 = new HashMap<String,Object>();
-		m3.put("category", rs3.getString("category"));
-		m3.put("goodsTitle", rs3.getString("goodsTitle"));
-		m3.put("goodsPrice", rs3.getInt("goodsPrice"));
-		list2.add(m3);
-	}
 
 %>
 
@@ -123,8 +119,22 @@
 	<!-- css -->
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<style>
+	
+		/* 폰트설정 학교안심 몽글몽글 */
+		@font-face {
+		    font-family: 'TTHakgyoansimMonggeulmonggeulR';
+		    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2402_keris@1.0/TTHakgyoansimMonggeulmonggeulR.woff2') format('woff2');
+		    font-weight: normal;
+		    font-style: normal;
+		}
+		.font {
+			font-family:'TTHakgyoansimMonggeulmonggeulR';
+		}
+			
+	</style>
 </head>
-<body>
+<body class="container font">
 	<!-- 메인메뉴  -->
 	<div>
 		<jsp:include page="/emp/inc/empMenu.jsp"></jsp:include>
@@ -149,55 +159,38 @@
 	</div>
 	
 	<!-- 메인내용 리스트  -->
-	<div>
-		<h1>goods목록</h1>
-		<table>
-			<tr>
-				<td>imge</td>
-				<td>category</td>
-				<td>goodsTitle</td>
-				<td>goodsPrice</td>			
-			</tr>
+
+		<h1>상품목록</h1>
+	
+			<div class="container text-center">
+			 	<div class="row">
+					 
+						<%
 			
-			<%
-				if(category == null){
-					for(HashMap<String,Object> m3 : list2) {
-			%>	
-				<tr>
-					
-                  <td>
-                     <a href="/shop/emp/goodsOne.jsp">
-                        <img src="/shop/emp/img/tue.png" width="200px;">
-                     </a>
-                  </td>
-                  	<td><%= m3.get("category") %></td>
-					<td><%= m3.get("goodsTitle") %></td>
-					<td><%= m3.get("goodsPrice") %></td>
-					
-				</tr>
-				<%
-					} 
-				} else {
-					for(HashMap<String,Object> m2 : list) {
-				%>
-				<tr>
-					<td>
-                     <a href="/shop/emp/goodsOne.jsp">
-                        <img src="/shop/emp/img/tue.png" width="200px;">
-                     </a>
-                 	</td>
-                 	<td><%= m2.get("category") %></td>
-					<td><%= m2.get("goodsTitle") %></td>
-					<td><%= m2.get("goodsPrice") %></td>
-				</tr>
-				<%		
-					}
-				}
-				%>
+								for(HashMap<String,Object> m2 : list) {
+						%>	
+						<div  class="col-4">
+		                 	<div>
+		                 		<a href="/shop/emp/goodsOne.jsp">
+		                 		<img src ="/shop/upload/<%= m2.get("filename") %>"width=200px;></a>
+		                 	</div>
+		                  	<div>카테고리 : <%= m2.get("category") %></div>
+							<div>상품명 : <%= m2.get("goodsTitle") %></div>
+							<div>가격 : <%= m2.get("goodsPrice") %></div>
+							<div> 상품 : 
+								 <a href="/shop/emp/updateGoodsForm.jsp?goodsTitle=<%=m2.get("goodsTitle") %>">수정
+								 <a href="/shop/emp/deleteGoodsAction.jsp?goodsNo=<%=m2.get("goodsNo") %>&category=<%=m2.get("category")%>">삭제</a>
+							</div>
+							
+						</div>
+						<%
+							} 
+						%>
+				</div>
 			
 		
-		</table>
-	</div>
+		
+	
 		<!-- 페이징 버튼 -->
 	<nav aria-label="Page navigation example">
 		<ul class="pagination justify-content-end">
@@ -226,6 +219,15 @@
 				<a class="page-link" href="/shop/emp/goodsList.jsp?currentPage=<%=currentPage+1%>&category=<%=category%>">다음페이지</a> 
 			</li>
 			<li class="page-item">
+				<a class="page-link" href="/shop/emp/goodsList.jsp?currentPage=<%=lastPage%>&category=<%=category%>">마지막페이지</a> 
+			</li>
+		<% 		
+			} else  {
+		%>
+			<li class="page-item disabled">
+				<a class="page-link" href="/shop/emp/goodsList.jsp?currentPage=<%=currentPage+1%>&category=<%=category%>">다음페이지</a> 
+			</li>
+			<li class="page-item disabled">
 				<a class="page-link" href="/shop/emp/goodsList.jsp?currentPage=<%=lastPage%>&category=<%=category%>">마지막페이지</a> 
 			</li>
 		<% 		
