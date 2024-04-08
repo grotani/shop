@@ -132,7 +132,7 @@
 			font-family:'TTHakgyoansimMonggeulmonggeulR';
 		}
 			
-	</style>
+</style>
 </head>
 <body class="container font">
 	<!-- 메인메뉴  -->
@@ -171,15 +171,14 @@
 						%>	
 						<div  class="col-4">
 		                 	<div>
-		                 		<a href="/shop/emp/goodsOne.jsp">
+		                 		<a href="/shop/emp/goodsOne.jsp?goodsNo=<%=(String) m2.get("goodsNo") %>">
 		                 		<img src ="/shop/upload/<%= m2.get("filename") %>"width=200px;></a>
 		                 	</div>
-		                  	<div>카테고리 : <%= m2.get("category") %></div>
-							<div>상품명 : <%= m2.get("goodsTitle") %></div>
-							<div>가격 : <%= m2.get("goodsPrice") %></div>
-							<div> 상품 : 
-								 <a href="/shop/emp/updateGoodsForm.jsp?goodsTitle=<%=m2.get("goodsTitle") %>">수정
-								 <a href="/shop/emp/deleteGoodsAction.jsp?goodsNo=<%=m2.get("goodsNo") %>&category=<%=m2.get("category")%>">삭제</a>
+		                  	<div>카테고리 : <%=(String) m2.get("category") %></div>
+							<div>상품명 : <%=(String) m2.get("goodsTitle") %></div>
+							<div>가격 : <%=(Integer) m2.get("goodsPrice") %></div>
+							<div>
+								 <a href="/shop/emp/deleteGoodsAction.jsp?goodsNo=<%=m2.get("goodsNo") %>&category=<%=m2.get("category")%>&filename=<%=m2.get("filename")%>">상품삭제</a>
 							</div>
 							
 						</div>

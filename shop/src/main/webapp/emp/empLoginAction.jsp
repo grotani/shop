@@ -41,7 +41,7 @@
 	
 	if(rs.next()) {
 		System.out.println("로그인 성공!"); 
-		// 하나의 세션 변수안에 여러개의 값을 저장하기 위해서 Hasp
+		// 하나의 세션 변수안에 여러개의 값을 저장하기 위해서 HashMap
 		HashMap<String,Object> loginEmp = new HashMap<String,Object>();
 		loginEmp.put("empId", rs.getString("empId"));
 		loginEmp.put("empName", rs.getString("empName"));

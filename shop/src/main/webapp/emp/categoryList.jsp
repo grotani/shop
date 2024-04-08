@@ -63,15 +63,13 @@
 <div>
 	<jsp:include page="/emp/inc/empMenu.jsp"></jsp:include>
 </div>
-<div class= "d-flex justify-content-end">
-	<a href="/shop/emp/addCategoryForm.jsp">category 추가</a>
-	<a href="/shop/emp/deleteCategoryForm.jsp?category=<%=category%>">category 삭제</a>
-</div >
+<div class= "d-flex justify-content-end"></div >
 	<h1>Category List</h1>
 	<table class="table border">
 		<tr>
 			<th>category</th>
 			<th>createDate</th>
+			<th>삭제</th>
 		</tr>
 		<%
 			for(HashMap<String, Object> m : list) {
@@ -79,10 +77,20 @@
 			<tr>
 				<td><%=(String)(m.get("category"))%></td>
 				<td><%=(String)(m.get("createDate"))%></td>
+				<td><a href="/shop/emp/deleteCategoryAction.jsp?category=<%=m.get("category") %>">삭제</a></td>
 			</tr>
 		<% 		
 			}
 		%>
 	</table>
+	<form method="post" action="/shop/emp/addCategoryAction.jsp">
+		<table>
+			<tr>
+				<td>category </td>
+				<td><input type="text" name="category">&nbsp;<button type="submit">추가하기</button></td>
+				
+			</tr>
+		</table>
+	</form>	
 </body>
 </html>
