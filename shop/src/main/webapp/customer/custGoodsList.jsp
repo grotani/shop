@@ -124,7 +124,12 @@
 			}
 		%>
 	</div>
-	
+	 <!-- 로그아웃 버튼 -->
+    <div class="text-end mt-3">
+        <form action="/shop/customer/logout.jsp" method="post">
+            <button type="submit" class="btn btn-dark mt-3">로그아웃</button>
+        </form>
+    </div>
 	<!-- 메인내용 리스트  -->
 
 		<h1>상품목록</h1>
