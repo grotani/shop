@@ -131,7 +131,12 @@
 		.font {
 			font-family:'TTHakgyoansimMonggeulmonggeulR';
 		}
-			
+		
+		a:link {text-decoration: none;}
+		
+		.list-group-item a {
+        color: black; /* 텍스트 색상을 검은색으로 설정합니다. */
+    }
 </style>
 </head>
 <body class="container font">
@@ -139,101 +144,86 @@
 	<div>
 		<jsp:include page="/emp/inc/empMenu.jsp"></jsp:include>
 	</div>
-	<div>
-		<a href="/shop/emp/addGoodsForm.jsp">상품등록</a>
+	<div class="container">
+	    <div class="row justify-content-end">
+			<div class="col-auto">
+		<a href="/shop/emp/addGoodsForm.jsp" class="btn btn-dark  btn-lg mt-4">상품등록</a>
+			</div>
+		</div>
 	</div>
 	
-	<!-- 서브메뉴 카테고리별 상품리스트 -->
-	<div>
-		<a href="/shop/emp/goodsList.jsp">전체</a>
-		<%
-			for(HashMap m : categoryList) {
-		%>
-			 <a href="/shop/emp/goodsList.jsp?category=<%=(String)(m.get("category"))%>">			
-					<%=(String)(m.get("category"))%>
-					(<%=(Integer)(m.get("cnt"))%>)
-				</a>	
-		<% 		
-			}
-		%>
-	</div>
-	
-	<!-- 메인내용 리스트  -->
-
-		<h1>상품목록</h1>
-	
-			<div class="container text-center">
-			 	<div class="row">
-					 
-						<%
-			
-								for(HashMap<String,Object> m2 : list) {
-						%>	
-						<div  class="col-4">
-		                 	<div>
-		                 		<a href="/shop/emp/goodsOne.jsp?goodsNo=<%=(String) m2.get("goodsNo") %>">
-		                 		<img src ="/shop/upload/<%= m2.get("filename") %>"width=200px;></a>
-		                 	</div>
-		                  	<div>카테고리 : <%=(String) m2.get("category") %></div>
-							<div>상품명 : <%=(String) m2.get("goodsTitle") %></div>
-							<div>가격 : <%=(Integer) m2.get("goodsPrice") %></div>
-							<div>
-								 <a href="/shop/emp/deleteGoodsAction.jsp?goodsNo=<%=m2.get("goodsNo") %>&category=<%=m2.get("category")%>&filename=<%=m2.get("filename")%>">상품삭제</a>
-							</div>
-							
-						</div>
-						<%
-							} 
-						%>
-				</div>
-			
-		
-		
-	
-		<!-- 페이징 버튼 -->
-	<nav aria-label="Page navigation example">
-		<ul class="pagination justify-content-end">
-		<%
-			if(currentPage>1) {
-		%>
-			<li class="page-item">
-				<a class="page-link " href="/shop/emp/goodsList.jsp?currentPage=1&category=<%=category%>">처음페이지</a> 
-			</li>
-			<li class="page-item">
-				<a class="page-link" href="/shop/emp/goodsList.jsp?<%=currentPage-1%>&category=<%=category%>">이전페이지</a> 
-			</li>
-		<%
-			} else {
-		%>
-			<li class="page-item disabled">
-				<a class="page-link" href="/shop/emp/goodsList.jsp?currentPage=1&category=<%=category%>&category=<%=category%>">처음페이지</a> 
-			</li>
-			<li class="page-item disabled">
-				<a class="page-link" href="/shop/emp/goodsList.jsp?<%=currentPage-1%>&category=<%=category%>">이전페이지</a> 
-			</li>
-		<%		
-			} if (currentPage < lastPage) {
-		%>
-			<li class="page-item">
-				<a class="page-link" href="/shop/emp/goodsList.jsp?currentPage=<%=currentPage+1%>&category=<%=category%>">다음페이지</a> 
-			</li>
-			<li class="page-item">
-				<a class="page-link" href="/shop/emp/goodsList.jsp?currentPage=<%=lastPage%>&category=<%=category%>">마지막페이지</a> 
-			</li>
-		<% 		
-			} else  {
-		%>
-			<li class="page-item disabled">
-				<a class="page-link" href="/shop/emp/goodsList.jsp?currentPage=<%=currentPage+1%>&category=<%=category%>">다음페이지</a> 
-			</li>
-			<li class="page-item disabled">
-				<a class="page-link" href="/shop/emp/goodsList.jsp?currentPage=<%=lastPage%>&category=<%=category%>">마지막페이지</a> 
-			</li>
-		<% 		
-			}
-		%>
-		</ul>
-	
-	
+	<div class="container">
+    <div class="row">
+        <!-- 카테고리 목록 -->
+        <div class="col-md-3">
+            <h2>카테고리</h2>
+            <ul class="list-group">
+                <li class="list-group-item"><a href="/shop/emp/goodsList.jsp">전체</a></li>
+                <% for(HashMap m : categoryList) { %>
+                <li class="list-group-item">
+                    <a href="/shop/emp/goodsList.jsp?category=<%=(String)(m.get("category"))%>">
+                        <%=(String)(m.get("category"))%> (<%=(Integer)(m.get("cnt"))%>)
+                    </a>
+                </li>    
+                <% } %>
+            </ul>
+        </div>
+        <!-- 상품 목록 -->
+        <div class="col-md-9">
+            <h1 class="text-center">상품 목록</h1>
+            <div class="row">
+                <% for(HashMap<String,Object> m2 : list) { %>
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                    <div>
+                   		 <a href="/shop/emp/goodsOne.jsp?goodsNo=<%=(String) m2.get("goodsNo") %>">
+                        	<img src="/shop/upload/<%= m2.get("filename") %>" class="card-img-top" alt="상품 이미지"></a>
+                     </div> 
+                        <div class="card-body">
+                            <h5 class="card-title"><%= m2.get("goodsTitle") %></h5>
+                   			<p class="card-text">가격: <%= String.format("%,d", m2.get("goodsPrice")) %>원</p> <!-- 가격에 쉼표 추가 -->
+                            <a href="/shop/emp/deleteGoodsAction.jsp?goodsNo=<%=m2.get("goodsNo") %>&category=<%=m2.get("category")%>&filename=<%=m2.get("filename")%>" class="btn btn-danger">상품 삭제</a>
+                        </div>
+                    </div>
+                </div>
+                <% } %>
+            </div>
+            <!-- 페이징 버튼 -->
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-end">
+                    <% if(currentPage>1) { %>
+                    <li class="page-item">
+                        <a class="page-link" href="/shop/emp/goodsList.jsp?currentPage=1&category=<%=category%>">처음페이지</a> 
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="/shop/emp/goodsList.jsp?<%=currentPage-1%>&category=<%=category%>">이전페이지</a> 
+                    </li>
+                    <% } else { %>
+                    <li class="page-item disabled">
+                        <a class="page-link" href="/shop/emp/goodsList.jsp?currentPage=1&category=<%=category%>">처음페이지</a> 
+                    </li>
+                    <li class="page-item disabled">
+                        <a class="page-link" href="/shop/emp/goodsList.jsp?<%=currentPage-1%>&category=<%=category%>">이전페이지</a> 
+                    </li>
+                    <% } if (currentPage < lastPage) { %>
+                    <li class="page-item">
+                        <a class="page-link" href="/shop/emp/goodsList.jsp?currentPage=<%=currentPage+1%>&category=<%=category%>">다음페이지</a> 
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="/shop/emp/goodsList.jsp?currentPage=<%=lastPage%>&category=<%=category%>">마지막페이지</a> 
+                    </li>
+                    <% } else  { %>
+                    <li class="page-item disabled">
+                        <a class="page-link" href="/shop/emp/goodsList.jsp?currentPage=<%=currentPage+1%>&category=<%=category%>">다음페이지</a> 
+                    </li>
+                    <li class="page-item disabled">
+                        <a class="page-link" href="/shop/emp/goodsList.jsp?currentPage=<%=lastPage%>&category=<%=category%>">마지막페이지</a> 
+                    </li>
+                    <% } %>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
 </body>
 </html>
