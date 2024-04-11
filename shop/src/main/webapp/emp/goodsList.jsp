@@ -83,15 +83,22 @@
 	// 디버깅 
 	System.out.println(categoryList);
 	
+	
+	String serchWord = ""; 
+	if(request.getParameter("serchWord") != null) { 
+		serchWord = request.getParameter("serchWord");
+	}
+	
 	// goods 목록 리스트  
-	String sql2 = "select goods_no goodsNo, category, goods_title goodsTitle, filename, goods_price goodsPrice from goods where category Like ? limit ?,?";
+	String sql2 = "select goods_no goodsNo, category, goods_title goodsTitle, filename, goods_price goodsPrice from goods where category Like ? and (goods_title Like ?) limit ?,?";
 		
 	PreparedStatement stmt2 = null;
 	ResultSet rs2 = null;
 	stmt2 = conn.prepareStatement(sql2);
 	stmt2.setString(1,"%"+category+"%");
-	stmt2.setInt(2, startRow);
-	stmt2.setInt(3, rowPerPage);
+	stmt2.setString(2,"%"+serchWord+"%");
+	stmt2.setInt(3, startRow);
+	stmt2.setInt(4, rowPerPage);
 	rs2 = stmt2.executeQuery();
 	
 	ArrayList<HashMap<String,Object>> list
@@ -144,12 +151,14 @@
 	<div>
 		<jsp:include page="/emp/inc/empMenu.jsp"></jsp:include>
 	</div>
-	<div class="container">
-	    <div class="row justify-content-end">
-			<div class="col-auto">
-		<a href="/shop/emp/addGoodsForm.jsp" class="btn btn-dark  btn-lg mt-4">상품등록</a>
-			</div>
-		</div>
+	
+	
+     <!-- 검색창 -->
+	<div class="col-md-6">
+	    <form method="get" action="/shop/emp/goodsList.jsp" class="input-group mb-3">
+	        <input type="text" class="form-control" placeholder="상품 검색" aria-label="Recipient's username" aria-describedby="button-addon2" name="serchWord">
+	        <button class="btn btn-dark" type="submit" id="button-addon2">검색</button>
+	    </form>
 	</div>
 	
 	<div class="container">
@@ -167,7 +176,17 @@
                 </li>    
                 <% } %>
             </ul>
+            <!-- 상품 등록 버튼 -->
+		    <div class="container">
+			    <div class="row justify-content-end">
+					<div class="col-auto">
+				<a href="/shop/emp/addGoodsForm.jsp" class="btn btn-dark  btn-lg mt-4">상품등록</a>
+					</div>
+				</div>
+			</div>   
         </div>
+   	 
+   
         <!-- 상품 목록 -->
         <div class="col-md-9">
             <h1 class="text-center">상품 목록</h1>
@@ -188,6 +207,9 @@
                 </div>
                 <% } %>
             </div>
+            
+   
+            
             <!-- 페이징 버튼 -->
             <nav aria-label="Page navigation example">
                 <ul class="pagination justify-content-end">

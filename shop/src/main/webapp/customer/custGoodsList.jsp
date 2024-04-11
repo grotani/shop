@@ -105,103 +105,109 @@
 			font-family:'TTHakgyoansimMonggeulmonggeulR';
 		}
 			
+		a:link {text-decoration: none;}
+		
+		.list-group-item a {
+        color: black; /* 텍스트 색상을 검은색으로 설정합니다. */
 </style>
 </head>
-<body class="container font">
+<body class="container-fluid font">
 
-	
-	<!-- 서브메뉴 카테고리별 상품리스트 -->
-	<div>
-		<a href="/shop/customer/custGoodsList.jsp">전체</a>
-		<%
-			for(HashMap m : categoryList) {
-		%>
-			 <a href="/shop/customer/custGoodsList.jsp?category=<%=(String)(m.get("category"))%>">			
-					<%=(String)(m.get("category"))%>
-					(<%=(Integer)(m.get("cnt"))%>)
-				</a>	
-		<% 		
-			}
-		%>
-	</div>
-	 <!-- 로그아웃 버튼 -->
-    <div class="text-end mt-3">
-        <form action="/shop/customer/logout.jsp" method="post">
-            <button type="submit" class="btn btn-dark mt-3">로그아웃</button>
-        </form>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="/shop/customer/custGoodsList.jsp">
+                <img src="/shop/images/logo.png" alt="로고" height="30">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">                            
+                     <!-- Logout Button -->
+              		  <li class="nav-item">
+	                    <form action="/shop/customer/logout.jsp" method="post">
+	                        <button type="submit" class="btn btn-link nav-link">로그아웃</button>
+	                    </form>
+                	</li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Category Menu -->
+        <div class="row mt-4">
+            <div class="col-lg-3">
+                <h3>카테고리</h3>
+                <ul class="list-group">
+                    <li class="list-group-item"><a href="/shop/customer/custGoodsList.jsp">전체</a></li>
+                    <% for(HashMap m : categoryList) { %>
+                        <li class="list-group-item">
+                            <a href="/shop/customer/custGoodsList.jsp?category=<%=(String)(m.get("category"))%>">
+                                <%=(String)(m.get("category"))%> (<%=(Integer)(m.get("cnt"))%>)
+                            </a>
+                        </li>    
+                    <% } %>
+                </ul>
+            </div>
+            <!-- Product List -->
+            <div class="col-lg-9">
+                <h1 class="mt-4">상품 목록</h1>
+                <div class="row mt-4">
+                    <% for(HashMap<String,Object> m2 : list) { %>
+                        <div class="col-lg-4 mb-4">
+                            <div class="card h-100">
+                                <img src="/shop/upload/<%= m2.get("filename") %>" class="card-img-top" alt="<%= m2.get("goodsTitle") %>">
+                                <div class="card-body">
+                                    <h5 class="card-title"><%= m2.get("goodsTitle") %></h5>
+                                    <p class="card-text">가격: <%= String.format("%,d", m2.get("goodsPrice")) %>원</p>
+                                    <a href="#" class="btn btn-primary">구매하기</a>
+                                </div>
+                            </div>
+                        </div>
+                    <% } %>
+                </div>
+                <!-- Pagination -->
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center mt-4">
+                        <% if(currentPage>1) { %>
+                            <li class="page-item">
+                                <a class="page-link" href="/shop/customer/custGoodsList.jsp?currentPage=1&category=<%=category%>">처음</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="/shop/customer/custGoodsList.jsp?currentPage=<%=currentPage-1%>&category=<%=category%>">이전</a>
+                            </li>
+                        <% } else { %>
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#">처음</a>
+                            </li>
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#">이전</a>
+                            </li>
+                        <% } %>
+                        <% if (currentPage < lastPage) { %>
+                            <li class="page-item">
+                                <a class="page-link" href="/shop/customer/custGoodsList.jsp?currentPage=<%=currentPage+1%>&category=<%=category%>">다음</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="/shop/customer/custGoodsList.jsp?currentPage=<%=lastPage%>&category=<%=category%>">마지막</a>
+                            </li>
+                        <% } else  { %>
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#">다음</a>
+                            </li>
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#">마지막</a>
+                            </li>
+                        <% } %>
+                    </ul>
+                </nav>
+            </div>
+        </div>
     </div>
-	<!-- 메인내용 리스트  -->
 
-		<h1>상품목록</h1>
-	
-			<div class="container text-center">
-			 	<div class="row">
-					 
-						<%
-			
-								for(HashMap<String,Object> m2 : list) {
-						%>	
-						<div  class="col-4">
-		                 	<div>
-		                 		<a href="/shop/customer/custGoodsOne.jsp?goodsNo=<%=(String) m2.get("goodsNo") %>">
-		                 		<img src ="/shop/upload/<%= m2.get("filename") %>"width=200px;></a>
-		                 	</div>
-		                  	<div>카테고리 : <%=(String) m2.get("category") %></div>
-							<div>상품명 : <%=(String) m2.get("goodsTitle") %></div>
-							<div>가격 : <%=(Integer) m2.get("goodsPrice") %></div>					
-						</div>
-						<%
-							} 
-						%>
-				</div>
-			
-		
-		
-	
-		<!-- 페이징 버튼 -->
-	<nav aria-label="Page navigation example">
-		<ul class="pagination justify-content-end">
-		<%
-			if(currentPage>1) {
-		%>
-			<li class="page-item">
-				<a class="page-link " href="/shop/customer/custGoodsList.jsp?currentPage=1&category=<%=category%>">처음페이지</a> 
-			</li>
-			<li class="page-item">
-				<a class="page-link" href="/shop/customer/custGoodsList.jsp?<%=currentPage-1%>&category=<%=category%>">이전페이지</a> 
-			</li>
-		<%
-			} else {
-		%>
-			<li class="page-item disabled">
-				<a class="page-link" href="/shop/customer/custGoodsList.jsp?currentPage=1&category=<%=category%>&category=<%=category%>">처음페이지</a> 
-			</li>
-			<li class="page-item disabled">
-				<a class="page-link" href="/shop/customer/custGoodsList.jsp?<%=currentPage-1%>&category=<%=category%>">이전페이지</a> 
-			</li>
-		<%		
-			} if (currentPage < lastPage) {
-		%>
-			<li class="page-item">
-				<a class="page-link" href="/shop/customer/custGoodsList.jsp?currentPage=<%=currentPage+1%>&category=<%=category%>">다음페이지</a> 
-			</li>
-			<li class="page-item">
-				<a class="page-link" href="/shop/customer/custGoodsList.jsp?currentPage=<%=lastPage%>&category=<%=category%>">마지막페이지</a> 
-			</li>
-		<% 		
-			} else  {
-		%>
-			<li class="page-item disabled">
-				<a class="page-link" href="/shop/customer/custGoodsList.jsp?currentPage=<%=currentPage+1%>&category=<%=category%>">다음페이지</a> 
-			</li>
-			<li class="page-item disabled">
-				<a class="page-link" href="/shop/customer/custGoodsList.jsp?currentPage=<%=lastPage%>&category=<%=category%>">마지막페이지</a> 
-			</li>
-		<% 		
-			}
-		%>
-		</ul>
-	
 	
 </body>
 </html>
