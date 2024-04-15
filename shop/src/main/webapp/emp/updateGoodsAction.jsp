@@ -1,3 +1,4 @@
+<%@page import="shop.dao.GoodsDAO"%>
 <%@page import="org.apache.catalina.util.Introspection"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.*"%>
@@ -21,10 +22,7 @@
 	
 %>
 <!-- Model Layer -->
-<% 
-	// DB 연결 
-	Class.forName("org.mariadb.jdbc.Driver");
-	Connection conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/shop","root","java1234");
+<%
 	
 	// 요청값 
 	int goodsNo= Integer.parseInt(request.getParameter("goodsNo"));
@@ -40,21 +38,8 @@
 	System.out.println(goodsAmount);
 	
 	// db업데이트 쿼리 
-	String sql = "UPDATE goods SET goods_title goodsTitle=?, goods_content goodsContent=?, goods_price goodsPrice=?, goods_amount goodsAmount=?, update_date=NOW() WHERE goods_no=?";
-	PreparedStatement stmt = null;
-	ResultSet rs = null;
 	
-	int row = 0;
-	stmt = conn.prepareStatement(sql);
-	stmt.setString(1,goodsTitle);
-	stmt.setString(2,goodsContent);
-	stmt.setInt(3,goodsPrice);
-	stmt.setInt(4,goodsAmount);
-	stmt.setInt(5,goodsNo);
-	
-	System.out.println(stmt + "상품수정");
-	
-	row = stmt.executeUpdate();
+	int row = GoodsDAO.updateGoods(goodsNo, goodsTitle, goodsContent, goodsPrice, goodsAmount);
 	
 	if(row == 1) {
 		response.sendRedirect("/shop/emp/goodsOne.jsp?goodsNo="+goodsNo);

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.*"%>
 <%@ page import="java.sql.*"%>
+<%@ page import="shop.dao.*" %>
 <%
 	request.setCharacterEncoding("UTF-8");
 	// 인증분기 : 세션 변수 이름 = > loginEmp
@@ -15,27 +16,15 @@
 		= (HashMap<String,Object>)(session.getAttribute("loginEmp"));
 	
 %>
-<!-- Model Layer -->
-<%
-	// DB 연결
-	Class.forName("org.mariadb.jdbc.Driver");
-	Connection conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/shop","root","java1234");
-	
-	String category = request.getParameter("category");
-	
-	String sql = "INSERT INTO category(category, create_date) VALUES (?, now())";
-	PreparedStatement stmt = null;
-	ResultSet rs = null;
-	stmt = conn.prepareStatement(sql);
-	int row = 0;
-	stmt.setString(1, category);
-	System.out.println(stmt +"카데고리 추가");
-	row = stmt.executeUpdate();
 	
 	
-%>
+
 <!-- Controller Layer -->
 <%
+	String category = request.getParameter("category");
+
+	int row = CategoryDAO.addCategory(category);
+	
 	if(row == 1) {
 		response.sendRedirect("/shop/emp/categoryList.jsp");
 	} else {

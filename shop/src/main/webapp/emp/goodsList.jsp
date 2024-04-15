@@ -1,8 +1,11 @@
+<%@page import="shop.dao.GoodsDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.sql.*"%>
 <%@ page import="java.util.*"%>
 <%@ page import="java.io.*" %>
 <%@ page import="java.nio.file.*" %>
+<%@ page import="shop.dao.*" %>
+
 <!-- Control Layer -->
 <%
 	// 인증분기 : 세션 변수 이름 = > loginEmp
@@ -31,32 +34,14 @@
 	if(category == null) {
 		category = "";
 	}
-	String sqlPage = "select count(*) from goods where category like ?";
-	PreparedStatement stmtPage = null;
-	ResultSet rsPage = null;
-	stmtPage = conn.prepareStatement(sqlPage);
-	stmtPage.setString(1, "%"+category+"%");
-	rsPage = stmtPage.executeQuery();
-	int totalRow  = 0;
-	if(rsPage.next()) {
-		totalRow = rsPage.getInt("count(*)");
-	}
+	int totalRow = GoodsDAO.page(category);
+	System.out.println(totalRow +"페이지확인");
 	int lastPage = totalRow / rowPerPage;
 	if(totalRow%rowPerPage != 0) {
 		lastPage = lastPage+1;
 	}
 	
-	/*if(rsPage.next()) {
-		totalRow = rsPage.getInt("");
-	}
-	*/
-	
-	/*
-		null 이면
-		select * from goods
-		null이 아니면
-		select * from goods where category=?
-	*/
+
 	System.out.println(currentPage + "    currentPage");
 	System.out.println(lastPage + "    lastPage");
 	System.out.println(totalRow + "    totalRow");
@@ -89,32 +74,10 @@
 		serchWord = request.getParameter("serchWord");
 	}
 	
-	// goods 목록 리스트  
-	String sql2 = "select goods_no goodsNo, category, goods_title goodsTitle, filename, goods_price goodsPrice from goods where category Like ? and (goods_title Like ?) limit ?,?";
-		
-	PreparedStatement stmt2 = null;
-	ResultSet rs2 = null;
-	stmt2 = conn.prepareStatement(sql2);
-	stmt2.setString(1,"%"+category+"%");
-	stmt2.setString(2,"%"+serchWord+"%");
-	stmt2.setInt(3, startRow);
-	stmt2.setInt(4, rowPerPage);
-	rs2 = stmt2.executeQuery();
 	
-	ArrayList<HashMap<String,Object>> list
-	=new ArrayList<HashMap<String,Object>>();
-	while(rs2.next()) {
-		HashMap<String,Object> m2 = new HashMap<String,Object>();
-		m2.put("goodsNo", rs2.getString("goodsNo"));
-		m2.put("category", rs2.getString("category"));
-		m2.put("goodsTitle", rs2.getString("goodsTitle"));
-		m2.put("filename", rs2.getString("filename"));
-		m2.put("goodsPrice", rs2.getInt("goodsPrice"));
-		list.add(m2);
-		
-	}
+	ArrayList<HashMap<String,Object>> goodsList = GoodsDAO.selectGoodsList(category, serchWord, startRow, rowPerPage);
 	
-
+	
 %>
 
 <!-- View Layer -->
@@ -191,18 +154,18 @@
         <div class="col-md-9">
             <h1 class="text-center">상품 목록</h1>
             <div class="row">
-                <% for(HashMap<String,Object> m2 : list) { %>
+                <% for(HashMap<String,Object> m : goodsList) { %>
                 <div class="col-md-4">
                     <div class="card mb-4">
                     <div>
-                   		 <a href="/shop/emp/goodsOne.jsp?goodsNo=<%=(String) m2.get("goodsNo") %>">
-                        	<img src="/shop/upload/<%= m2.get("filename") %>" class="card-img-top" alt="상품 이미지"></a>
+                   		 <a href="/shop/emp/goodsOne.jsp?goodsNo=<%=(Integer) m.get("goodsNo") %>">
+                        	<img src="/shop/upload/<%= m.get("filename") %>" class="card-img-top" alt="상품 이미지"></a>
                      </div> 
                         <div class="card-body">
-                            <h5 class="card-title"><%= m2.get("goodsTitle") %></h5>
-                   			<p class="card-text">가격: <%= String.format("%,d", m2.get("goodsPrice")) %>원</p> <!-- 가격에 쉼표 추가 -->
-                            <a href="/shop/emp/deleteGoodsAction.jsp?goodsNo=<%=m2.get("goodsNo") %>&category=<%=m2.get("category")%>&filename=<%=m2.get("filename")%>" class="btn btn-danger">상품 삭제</a>
-                        </div>
+                            <h5 class="card-title"><%= m.get("goodsTitle") %></h5>
+                   			<p class="card-text">가격: <%= String.format("%,d", m.get("goodsPrice")) %>원</p> <!-- 가격에 쉼표 추가 -->
+							<a href="/shop/emp/deleteGoodsAction.jsp?goodsNo=<%= m.get("goodsNo") %>&category=<%= m.get("category") %>&filename=<%= m.get("filename") %>" class="btn btn-danger">상품 삭제</a>
+	                        </div>
                     </div>
                 </div>
                 <% } %>

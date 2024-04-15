@@ -1,3 +1,4 @@
+<%@page import="shop.dao.GoodsDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.sql.*"%>
 <%@ page import="java.util.*"%>
@@ -13,35 +14,12 @@
 
 <%
 	// DB 연결 
-	Class.forName("org.mariadb.jdbc.Driver");
-	Connection conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/shop","root","java1234");
 	
 	int goodsNo= Integer.parseInt(request.getParameter("goodsNo"));
 	System.out.println(goodsNo + "이미지");
-	String sql = "SELECT goods_no goodsNo, category, goods_title goodsTitle, filename, goods_content goodsContent, goods_price goodsPrice, goods_amount goodsAmount, create_date createDate FROM goods WHERE goods_no = ?";
-	PreparedStatement stmt = null;
-	ResultSet rs = null;
-	stmt = conn.prepareStatement(sql);
-	stmt.setInt(1,goodsNo);
-	rs = stmt.executeQuery();
-	
-	ArrayList<HashMap<String,Object>> list
-	= new ArrayList<HashMap<String,Object>>();
-	while(rs.next()) {
-		HashMap<String,Object> m = new HashMap<String,Object>();
-		m.put("goodsNo", rs.getInt("goodsNo"));
-		m.put("category", rs.getString("category"));
-		m.put("goodsTitle", rs.getString("goodsTitle"));
-		m.put("filename", rs.getString("filename"));
-		m.put("goodsContent", rs.getString("goodsContent"));
-		m.put("goodsPrice", rs.getInt("goodsPrice"));
-		m.put("goodsAmount", rs.getInt("goodsAmount"));
-		m.put("createDate", rs.getString("createDate"));
-		list.add(m);
-	}
 	
 	
-
+	ArrayList<HashMap<String, Object>> goodsOne = GoodsDAO.goodsOne(goodsNo); 
 %>
 
 <!-- View Layer -->
@@ -78,7 +56,7 @@
 <h1>상품상세</h1>
 	<div>
 		<%
-			for(HashMap<String,Object> m : list) {
+			for(HashMap<String,Object> m : goodsOne) {
 		%>
 		<div>
 			<div>

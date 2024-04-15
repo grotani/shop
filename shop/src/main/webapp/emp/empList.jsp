@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.sql.*"%>
 <%@ page import="java.util.*"%>
+<%@ page import="shop.dao.*" %>
+
 
 <!-- Control Layer -->
 <%
@@ -12,9 +14,7 @@
 %>	
 
 <%
-	// DB 연결 
-    Class.forName("org.mariadb.jdbc.Driver");
-	Connection conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/shop","root","java1234");
+	
 	
 	// 페이징 연결 
 	int currentPage = 1;
@@ -26,17 +26,9 @@
 	int startRow = ((currentPage-1) *rowPerPage);
 	
 	// totalrRow Sql
-	String SqlPage = "select count(*) from emp";
-	PreparedStatement stmtPage = null;
-	ResultSet rsPage = null;
-	stmtPage = conn.prepareStatement(SqlPage);
-	rsPage = stmtPage.executeQuery();
-	int totalRow = 0;
+	int totalRow = EmpDAO.page();
 	
-	if(rsPage.next()) {
-		totalRow = rsPage.getInt("count(*)");
-	}
-		System.out.println(totalRow +"<==totalROw");
+	System.out.println(totalRow +"<==totalROw");
 	
 	int lastPage = totalRow / rowPerPage;
 	if(totalRow%rowPerPage != 0) {
@@ -53,33 +45,8 @@
 	// -> 일반화된 자료구조로 (ArrayList<Hashmap>)로  변경을 해야 한다 -> 모델 취득
 	
 	
-	PreparedStatement stmt = null;
-	ResultSet rs = null;
-	String sql="select emp_id empId, emp_name empName, emp_job empJob, hire_date hireDate, active From emp Order by hire_date desc limit ?, ?";
-	stmt = conn.prepareStatement(sql);
-	stmt.setInt(1,startRow);
-	stmt.setInt(2,rowPerPage);
-	rs = stmt.executeQuery();  
-	// JDBD API 종속된 자료구조를  -> 기본API 자료구조형(ArrayList) 으로 변경
-	
-	
-	
-	
-	
-	ArrayList<HashMap<String, Object>> list
-		= new ArrayList<HashMap<String, Object>>();
-	// ResultSet -> ArratList <HashMap<String, Object>>
-	while(rs.next()) {
-		HashMap<String, Object> m = new HashMap<String, Object>(); 
-		m.put("empId", rs.getString("empId"));
-		m.put("empName", rs.getString("empName"));
-		m.put("empJob", rs.getString("empJob"));
-		m.put("hireDate", rs.getString("hireDate"));
-		m.put("active", rs.getString("active"));
-		list.add(m);
-	}
-	// JDBC API 사용이 끝났다면  DB 자원들을 반납
-	
+	ArrayList<HashMap<String,Object>> empList = EmpDAO.empList(startRow, rowPerPage);
+
 %>
 
 <!-- View Layer : 모델 (ArrayList<HashMap<String, Object>>) 출력 -->
@@ -132,7 +99,7 @@
 			<th>active</th>	
 		</tr>
 		<%
-			for(HashMap<String,Object> m : list) {
+			for(HashMap<String,Object> m : empList) {
 		%>
 			<tr>
 				<td><%=(String)(m.get("empId"))%></td>

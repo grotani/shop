@@ -3,6 +3,8 @@
 <%@ page import= "java.sql.*" %>
 <%@page import="java.net.URLEncoder"%>
 <%@ page import="java.nio.file.*" %>
+<%@ page import="shop.dao.*" %>
+
 <%
 	
 	// goods 삭제요청값 
@@ -12,15 +14,10 @@
 	System.out.println(category+"카테고리");
 	
 	System.out.println(request.getParameter("filename"));
-	String sql = "DELETE FROM goods WHERE goods_no = ?";
-	Class.forName("org.mariadb.jdbc.Driver");
-	Connection conn = null;
-	PreparedStatement stmt = null;
-	conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/shop","root","java1234");
-	stmt = conn.prepareStatement(sql);
-	stmt.setString(1, goodsNo);
 	
-	int row = stmt.executeUpdate();
+	
+	
+	int row = GoodsDAO.deleteGoods(goodsNo);
 	
 	if(row == 1) {
 		String filePath = request.getServletContext().getRealPath("upload");

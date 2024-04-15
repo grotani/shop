@@ -50,6 +50,10 @@
 		<img src = "/shop/upload/<%=rs.getString("filename")%>" width=200px;>
 	</div>	
 	<div>
+		<input type="hidden" name="goodsNo" value="<%=goodsNo%>">
+	</div>
+	
+	<div>
 		카테고리
 		<input type="text" name="category" value="<%=rs.getString("category")%>" readonly="readonly">
 	</div>
