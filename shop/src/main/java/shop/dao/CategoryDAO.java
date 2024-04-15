@@ -51,4 +51,22 @@ public class CategoryDAO {
 		return row;
 	}
 	
+	public static ArrayList<String> selectCategory() throws Exception{
+		ArrayList<String> list = new ArrayList<String>();
+		
+		Connection conn = DBHelper.getConnection();
+		PreparedStatement stmt = null;
+		ResultSet rs = null; 
+
+		String sql ="SELECT category FROM category";
+		stmt = conn.prepareStatement(sql);
+		rs = stmt.executeQuery();
+		
+		while(rs.next()) {
+			list.add(rs.getString("category"));
+		}
+		
+		return list;
+	}
+	
 }

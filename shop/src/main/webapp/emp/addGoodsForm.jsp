@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.sql.*"%>
 <%@ page import="java.util.*"%>
+<%@ page import="shop.dao.*" %>
 <%
 	// 인증분기 : 세션 변수 이름 = > loginEmp
 	if(session.getAttribute("loginEmp") == null) { 
@@ -10,24 +11,7 @@
 %>
 <!-- Model Layer -->
 <%
-	Class.forName("org.mariadb.jdbc.Driver");
-	Connection conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/shop","root","java1234");
-	
-	
-	String sql1 = "select category from category";
-	PreparedStatement stmt1 = null;
-	ResultSet rs1= null;
-	stmt1 = conn.prepareStatement(sql1);
-	rs1 = stmt1.executeQuery();
-	
-	ArrayList<String> categoryList = 
-		new ArrayList<String>();
-	while(rs1.next()) {
-		categoryList.add(rs1.getString("category"));
-		
-	}
-	// 디버깅 
-	System.out.println(categoryList);
+ArrayList<String> categoryList = CategoryDAO.selectCategory();
 %>
 <!-- View Layer -->
 <!DOCTYPE html>
