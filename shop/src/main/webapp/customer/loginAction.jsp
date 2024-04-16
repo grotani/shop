@@ -2,6 +2,7 @@
 <%@ page import="java.sql.*"%>
 <%@ page import="java.util.*"%>
 <%@ page import="java.net.URLEncoder"%>
+<%@ page import="shop.dao.*" %>
 <%
     if(session.getAttribute("loginCustomer") != null) { 
         response.sendRedirect("/shop/customer/custGoodsList.jsp"); 
@@ -9,34 +10,21 @@
     }
 %>
 <%
-    // DB 연결
-    Class.forName("org.mariadb.jdbc.Driver");
-    Connection conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/shop","root","java1234");
-    
+  
     String mail = request.getParameter("mail");
     String pw = request.getParameter("pw");
     
-    String sql ="select mail, pw, name, birth, gender from customer where mail=? and pw=password(?)";
-    PreparedStatement stmt = null;
-    ResultSet rs = null;
-    stmt = conn.prepareStatement(sql);
-    stmt.setString(1, mail);
-    stmt.setString(2, pw);
-    rs = stmt.executeQuery();
+    HashMap<String, String> loginCustomer = CustomerDAO.login(mail, pw);
     
-    if(rs.next()) {
-        System.out.println("로그인 성공");
-        
-        HashMap<String,Object> loginCustomer = new HashMap<String,Object>();
-        loginCustomer.put("mail", rs.getString("mail")); 
-        loginCustomer.put("name", rs.getString("name")); 
-        
-        session.setAttribute("loginCustomer", loginCustomer);
-        
-        response.sendRedirect("/shop/customer/custGoodsList.jsp");
-        
-    } else {
+    if(loginCustomer == null) {
+        System.out.println("로그인 실패");
         String errMsg = URLEncoder.encode("입력하신 이메일과 비밀번호를 확인해주세요." , "utf-8");
         response.sendRedirect("/shop/customer/loginForm.jsp?errMsg="+errMsg);
+       
+        
+    } else {
+    	System.out.println("로그인 성공");
+         session.setAttribute("loginCustomer", loginCustomer); 
+        response.sendRedirect("/shop/customer/custGoodsList.jsp");
     }
 %>

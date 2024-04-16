@@ -2,9 +2,9 @@
 
 <%
 	
-	String checkMail = request.getParameter("checkMail");
-	if(checkMail == null) {
-		checkMail = "";
+	String mail = request.getParameter("mail");
+	if(mail == null) {
+		mail = "";
 	}
 	String cm = request.getParameter("cm");
 	if(cm == null) {
@@ -30,7 +30,7 @@
 	<form method="post" action="/shop/customer/checkIdAction.jsp">
 		<div>
 			mail 확인:
-			<input type="email" name="checkMail" value="<%=checkMail%>"> 
+			<input type="email" name="mail" value="<%=mail%>"> 
 			<span><%=msg %></span>
 			<button type="submit">중복확인</button>
 		</div>
@@ -42,7 +42,7 @@
 			<%
 				if(cm.equals("o")) {
 			%>
-				<input value="<%=checkMail %>" type="text" name="mail" readonly="readonly">
+				<input value="<%=mail %>" type="text" name="mail" readonly="readonly">
 			<% 		
 				} else {
 			%>

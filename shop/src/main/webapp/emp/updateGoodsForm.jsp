@@ -26,14 +26,11 @@
 	stmt.setInt(1,goodsNo);
 	rs = stmt.executeQuery();
 	
+	
 	if(rs.next()){
 		
 	
 %>
-
-
-
-
 
 
 <!DOCTYPE html>
