@@ -12,15 +12,25 @@
 <%
 
 	// 비밀번호 변경
-	
+	String name = request.getParameter("name");
 	String mail = request.getParameter("mail");
 	String oldPw = request.getParameter("oldPw");
 	String newPw = request.getParameter("newPw");
 	
+	System.out.println(mail);
+	System.out.println(oldPw + "<==oldPw");
+	System.out.println(newPw + "<==newPw");
+	
 	
 	int row = CustomerDAO.updatePw(mail, oldPw, newPw);
 	
-	if (row == 1) {
+	if(row == 1){//수정 성공
+		System.out.println("비밀번호변경");
+		response.sendRedirect("/shop/customer/customerOne.jsp?name="+name);
+		
+	}else{
+		System.out.println("비밀번호변경 실패");
+		response.sendRedirect("/shop/customer/editPwForm.jsp");
 		
 	}
 %>

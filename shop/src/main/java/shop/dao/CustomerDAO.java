@@ -3,7 +3,10 @@ package shop.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.HashMap;
+
+import org.eclipse.jdt.internal.compiler.util.CharArrayHashMap;
 
 
 public class CustomerDAO {
@@ -78,9 +81,35 @@ public class CustomerDAO {
 		stmt.setString(1, newPw);
 		stmt.setString(2, mail);
 		stmt.setString(3, oldPw);
+		row = stmt.executeUpdate();
 		
 		conn.close();
 		return row;
 	}
 	
+	// 회원정보 보여주기
+	// 호출 : customerOne.jsp
+	// param : String(mail, name, birth, gender)
+	// return : ArrayListHashMap 
+	public static ArrayList<HashMap<String, Object>> customerOne (String name) throws Exception {
+		ArrayList<HashMap<String, Object>> list  = new ArrayList<HashMap<String,Object>>();
+		
+		Connection conn = DBHelper.getConnection();
+		String sql = "SELECT mail, NAME, birth, gender FROM customer WHERE NAME = ?";
+		PreparedStatement stmt = conn.prepareStatement(sql);
+		stmt.setString(1,name);
+		ResultSet rs = stmt.executeQuery();
+		
+		while(rs.next()){
+			HashMap<String,Object> m = new HashMap<String,Object>();
+			m.put("mail", rs.getString("mail"));
+			m.put("name", rs.getString("name"));
+			m.put("birth", rs.getString("birth"));
+			m.put("gender", rs.getString("gender"));
+			
+			list.add(m);
+		}
+		conn.close();
+		return list;
+	}
 }

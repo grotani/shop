@@ -1,6 +1,14 @@
 <%@page import="java.util.HashMap"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-
+<%
+	//로그인 세션변수 loginCustomer
+			
+	
+	if (session.getAttribute("loginCustomer") == null){
+		response.sendRedirect("/shop/customer/custLoginForm.jsp");
+		return;
+	} 
+%>
 
 
 
@@ -16,3 +24,4 @@
                 }
             %>
 </div>
+</nav>
