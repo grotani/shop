@@ -112,7 +112,9 @@
 </style>
 </head>
 <body class="container-fluid font">
-
+<div>
+	<jsp:include page="/customer/inc/customerMenu.jsp"></jsp:include>
+</div>
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
