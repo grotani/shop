@@ -3,6 +3,7 @@
 <%@ page import="java.util.*"%>
 <%@ page import="java.io.*" %>
 <%@ page import="java.nio.file.*" %>
+<%@ page import="shop.dao.*" %>
 <%
 	if(session.getAttribute("loginCustomer") == null) { 
 		response.sendRedirect("/shop/customer/loginForm.jsp"); 
@@ -26,16 +27,10 @@
 		if(category == null) {
 			category = "";
 		}
-		String sqlPage = "select count(*) from goods where category like ?";
-		PreparedStatement stmtPage = null;
-		ResultSet rsPage = null;
-		stmtPage = conn.prepareStatement(sqlPage);
-		stmtPage.setString(1, "%"+category+"%");
-		rsPage = stmtPage.executeQuery();
-		int totalRow  = 0;
-		if(rsPage.next()) {
-			totalRow = rsPage.getInt("count(*)");
-		}
+		// 페이징
+		int totalRow = GoodsDAO.page(category);
+		
+		
 		int lastPage = totalRow / rowPerPage;
 		if(totalRow%rowPerPage != 0) {
 			lastPage = lastPage+1;
@@ -82,6 +77,14 @@
 			list.add(m2);
 			
 		}
+		
+		String serchWord = ""; 
+		if(request.getParameter("serchWord") != null) { 
+			serchWord = request.getParameter("serchWord");
+		}
+		
+		ArrayList<HashMap<String,Object>> goodsList = GoodsDAO.selectGoodsList(category, serchWord, startRow, rowPerPage);
+
 %>
 <!-- View Layer -->
 <!DOCTYPE html>
@@ -158,13 +161,13 @@
             <div class="col-lg-9">
                 <h1 class="mt-4">상품 목록</h1>
                 <div class="row mt-4">
-                    <% for(HashMap<String,Object> m2 : list) { %>
+                    <% for(HashMap<String,Object> m : goodsList) { %>
                         <div class="col-lg-4 mb-4">
                             <div class="card h-100">
-                                <img src="/shop/upload/<%= m2.get("filename") %>" class="card-img-top" alt="<%= m2.get("goodsTitle") %>">
+                                <img src="/shop/upload/<%= m.get("filename") %>" class="card-img-top" alt="<%= m.get("goodsTitle") %>">
                                 <div class="card-body">
-                                    <h5 class="card-title"><%= m2.get("goodsTitle") %></h5>
-                                    <p class="card-text">가격: <%= String.format("%,d", m2.get("goodsPrice")) %>원</p>
+                                    <h5 class="card-title"><%= m.get("goodsTitle") %></h5>
+                                    <p class="card-text">가격: <%= String.format("%,d", m.get("goodsPrice")) %>원</p>
                                     <a href="#" class="btn btn-primary">구매하기</a>
                                 </div>
                             </div>

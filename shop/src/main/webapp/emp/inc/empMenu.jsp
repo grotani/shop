@@ -21,6 +21,9 @@
 		<li class="nav-item">
 		<a  class="nav-link" href="/shop/emp/goodsList.jsp">상품관리</a>
 		</li>
+		<li class="nav-item">
+		<a  class="nav-link" href="/shop/emp/customerList.jsp">회원목록</a>
+		</li>
 		<span>
 			<!-- 개인정보 수정 -->
 			<li class="nav-item">
@@ -28,6 +31,8 @@
 				<%=(String)(loginMember.get("empName")) %>님 반갑습니다
 			</a> 
 			</li>
+		</ul>	
+
 	</span>
 </div>
 	

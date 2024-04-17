@@ -76,7 +76,7 @@ public class CustomerDAO {
 	public static int updatePw(String mail, String oldPw, String newPw) throws Exception {
 		int row = 0;
 		Connection conn = DBHelper.getConnection();
-		String sql = "update customer  set pw = password(?)  where mail = ? and pw = password(?)"; 
+		String sql = "update customer  set pw = password(?), update_date = now()  where mail = ? and pw = password(?)"; 
 		PreparedStatement stmt = conn.prepareStatement(sql);
 		stmt.setString(1, newPw);
 		stmt.setString(2, mail);
@@ -95,7 +95,7 @@ public class CustomerDAO {
 		ArrayList<HashMap<String, Object>> list  = new ArrayList<HashMap<String,Object>>();
 		
 		Connection conn = DBHelper.getConnection();
-		String sql = "SELECT mail, NAME, birth, gender FROM customer WHERE NAME = ?";
+		String sql = "SELECT mail, pw, NAME, birth, gender, update_date updateDate, create_date createDate FROM customer WHERE NAME = ?";
 		PreparedStatement stmt = conn.prepareStatement(sql);
 		stmt.setString(1,name);
 		ResultSet rs = stmt.executeQuery();
@@ -105,11 +105,67 @@ public class CustomerDAO {
 			m.put("mail", rs.getString("mail"));
 			m.put("name", rs.getString("name"));
 			m.put("birth", rs.getString("birth"));
+			m.put("pw", rs.getString("pw"));
 			m.put("gender", rs.getString("gender"));
+			m.put("updateDate", rs.getString("updateDate"));
+			m.put("createDate", rs.getString("createDate"));
 			
 			list.add(m);
 		}
 		conn.close();
 		return list;
 	}
+	
+	// 회원 탈퇴
+	// 호출 : deleteCustomer.jsp 
+	// param : String (세션안 mail),String(pw)
+	// return : int(1이면 탈퇴, 0이면 탈퇴실패)
+	
+	public static int deleteCustomer(String mail, String pw) throws Exception {
+		int row = 0;
+		Connection conn = DBHelper.getConnection();
+		String sql = "delete from customer where mail = ? and pw = ?";
+		PreparedStatement stmt = conn.prepareStatement(sql);
+		stmt.setString(1, mail);
+		stmt.setString(2, pw);
+		row = stmt.executeUpdate();
+		
+		conn.close();
+		return row;
+		
+	}
+	// 관리자 페이지에서 전체 회원정보 보기 (pw제외)
+	// 호출 emp/customerList.jsp
+	// param : void
+	// return : customer 배열 (리스트) ArrayList<HashMap<String, Object>>
+	public static ArrayList<HashMap<String, Object>> selectCustomerListByPage(
+			int startRow, int rowPerPage) throws Exception {
+		ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
+		
+		Connection conn = DBHelper.getConnection();
+		String sql = "select mail, name, birth, gender, update_date updateDate,"
+				+ " create_date createDate"
+				+ " from customer"
+				+ " order by mail"
+				+ " limit ?,?";
+		PreparedStatement stmt = conn.prepareStatement(sql);
+		stmt.setInt(1, startRow);
+		stmt.setInt(2, rowPerPage);
+		ResultSet rs = stmt.executeQuery();
+		
+		while(rs.next()) {
+			HashMap<String, Object> m = new HashMap<String, Object>();
+			m.put("mail", rs.getString("mail"));
+			m.put("name", rs.getString("name"));
+			m.put("birth", rs.getString("birth"));
+			m.put("gender", rs.getString("gender"));
+			m.put("updateDate", rs.getString("updateDate"));
+			m.put("createDate", rs.getString("createDate"));
+			list.add(m);
+			
+		}
+		conn.close();
+		return list;
+	}
+	
 }

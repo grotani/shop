@@ -7,6 +7,7 @@
 	
 	String errMsg = request.getParameter("errMsg");
 	String logoutMsg = request.getParameter("logoutMsg");
+	String deleteMsg = request.getParameter("deleteMsg");
 %>
 
 <!DOCTYPE html>
@@ -49,6 +50,10 @@
             <div class="alert alert-success" role="alert">
                 <%= logoutMsg %>
             </div>
+        <% } else if (deleteMsg != null) { %>
+        	<div class="alert alert-success" role="alert">
+        		 <%= deleteMsg %>
+        	</div>    
         <% } %>
         <form method="post" action="/shop/customer/loginAction.jsp">
             <div class="mb-3">

@@ -4,6 +4,8 @@ import java.util.*;
 import java.sql.Connection;
 
 public class GoodsDAO {
+	
+	// goods 목록 보여주기 
 	public static ArrayList<HashMap<String,Object>> selectGoodsList (
 	String category, String serchWord, int startRow, int rowPerPage)  throws Exception {
 	ArrayList<HashMap<String,Object>> list =
@@ -70,7 +72,7 @@ public class GoodsDAO {
 
 	}
 	
-	
+	// goods 상세보기 
 	public static ArrayList<HashMap<String,Object>> goodsOne (int goodsNo)throws Exception {
 		ArrayList<HashMap<String,Object>> list =
 				new ArrayList<HashMap<String,Object>>();
@@ -146,4 +148,44 @@ public class GoodsDAO {
 		conn.close();
 		return totalRow;
 	}
+	
+	
+	
+	// 고객 로그인 후 상품목록 페이지
+	// customer/custGoodsList.jsp
+	// param : void 
+	// return : Goods의 일부속성이 필요 배열 => ArrayList<HashMap<String, Object>
+	
+	public static ArrayList<HashMap<String, Object>> selectGoodsList (
+			String category, int startRow, int rowPerPage) throws Exception {
+		ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
+		Connection conn = DBHelper.getConnection();
+		String sql = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		if(category != null || category.equals("")) {
+			sql = "select goods_no goodsNo, category, goods_title goodsTitle,"
+					+ " goods_price goodsPrice"
+					+ " from goods "
+					+ " where category = ?"					
+					+ " order by goods_no desc "
+					+ " offset ? rows fetch next ? rows only"; // DB수정하기 
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, category);
+			stmt.setInt(2, startRow);
+			stmt.setInt(3, rowPerPage);
+			
+		} else {
+			sql = "select goods_no goodsNo, category, goods_title goodsTitle,"
+					+ " goods_price goodsPrice"
+					+ " from goods order by goods_no desc offset ? rows fetch next ? rows only"; // DB수정하기 
+		stmt = conn.prepareStatement(sql);
+		stmt.setInt(1, startRow);
+		stmt.setInt(2, rowPerPage);	
+		}
+		rs = stmt.executeQuery();
+		return list;
+	}
+	
 }
