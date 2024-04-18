@@ -88,5 +88,34 @@ public class EmpDAO {
 			return list;
 	   }
 	   
+	   // 직원상세정보 보기
+	   // 호출 : empOne.jsp
+	   // return Array<HashMap<String, Object>
+	   
+	   public static ArrayList<HashMap<String, Object>> empOne (String empName) throws Exception {
+		   ArrayList<HashMap<String,Object>> list = 
+				   new  ArrayList<HashMap<String,Object>>();
+		   Connection conn = DBHelper.getConnection();
+		   
+		   String sql = "select emp_id empId, grade, emp_name empName, emp_job empJob, hire_date hireDate, active from emp where emp_name = ?";
+		   PreparedStatement stmt = conn.prepareStatement(sql);
+		   stmt.setString(1,empName );
+		   
+		   ResultSet rs = stmt.executeQuery();
+		   while (rs.next()) {
+			   HashMap<String, Object> m = new HashMap<String, Object>();
+			   m.put("empId", rs.getString("empId"));
+			   m.put("grade", rs.getInt("grade"));
+			   m.put("empName", rs.getString("empName"));
+			   m.put("empJob", rs.getString("empJob"));
+			   m.put("hireDate", rs.getString("hireDate"));
+			   m.put("active", rs.getString("active"));
+			   list.add(m);
+		   }
+		   conn.close();
+		   return list;
+		   
+		   
+	   }
 	   
 	}

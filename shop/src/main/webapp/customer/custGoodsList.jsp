@@ -164,7 +164,10 @@
                     <% for(HashMap<String,Object> m : goodsList) { %>
                         <div class="col-lg-4 mb-4">
                             <div class="card h-100">
-                                <img src="/shop/upload/<%= m.get("filename") %>" class="card-img-top" alt="<%= m.get("goodsTitle") %>">
+                            <div>
+                            	<a href="/shop/customer/custGoodsOne.jsp?goodsNo=<%=(Integer)m.get("goodsNo")%>">
+                                <img src="/shop/upload/<%= m.get("filename") %>" class="card-img-top" alt="<%= m.get("goodsTitle") %>"></a>
+                             </div>  
                                 <div class="card-body">
                                     <h5 class="card-title"><%= m.get("goodsTitle") %></h5>
                                     <p class="card-text">가격: <%= String.format("%,d", m.get("goodsPrice")) %>원</p>

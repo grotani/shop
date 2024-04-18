@@ -188,4 +188,32 @@ public class GoodsDAO {
 		return list;
 	}
 	
+	// 고객 상품 상세보기
+	// 호출 : custGoodsOne.jsp
+	// return :  
+	
+	public static HashMap<String, Object> selectCustGoodsOne (int goodsNo)
+											throws Exception {
+		HashMap<String, Object> map = null;
+		
+		Connection conn = DBHelper.getConnection();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		String sql = "SELECT goods_no goodsNo, category, goods_title goodsTitle, filename, goods_content goodsContent, goods_price goodsPrice, goods_amount goodsAmount FROM goods WHERE goods_no = ?";
+		stmt = conn.prepareStatement(sql);
+		stmt.setInt(1, goodsNo);
+		rs = stmt.executeQuery();
+		while(rs.next()) {
+			HashMap<String,Object> m = new HashMap<String,Object>();
+			m.put("goodsNo", rs.getInt("goodsNo"));
+			m.put("category", rs.getString("category"));
+			m.put("goodsTitle", rs.getString("goodsTitle"));
+			m.put("filename", rs.getString("filename"));
+			m.put("goodsContent", rs.getString("goodsContent"));
+			m.put("goodsPrice", rs.getInt("goodsPrice"));
+			m.put("goodsAmount", rs.getInt("goodsAmount"));
+		}
+		conn.close();
+		return map; 
+	}
 }
