@@ -16,11 +16,6 @@
 %>
 
 <%
-	// DB 연결 
-	Class.forName("org.mariadb.jdbc.Driver");
-	Connection conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/shop","root","java1234");
-	
-	
 	// 페이징 연결
 	int currentPage = 1;
 	if(request.getParameter("currentPage")!= null) {
@@ -49,33 +44,21 @@
 
 <!-- Model Layer -->
 <%
-	String sql1 = "select category, count(*) cnt from goods  GROUP BY category ORDER BY category ASC";
-	PreparedStatement stmt1 = null;
-	ResultSet rs1= null;
-	stmt1 = conn.prepareStatement(sql1);
-	rs1 = stmt1.executeQuery();
+		//카테고리 목록 개수
+		ArrayList<HashMap<String,Object>> categoryList = GoodsDAO.selectCategoryCount();
+		System.out.println(categoryList);
 	
-	ArrayList<HashMap<String,Object>> categoryList = 
-		new ArrayList<HashMap<String,Object>>();
-	while(rs1.next()) {
-		HashMap<String,Object> m = new HashMap<String,Object>();
-		m.put("category", rs1.getString("category"));
-		m.put("cnt", rs1.getInt("cnt"));
-		categoryList.add(m);
 		
-	}
-	// 디버깅 
-	System.out.println(categoryList);
 	
-	
-	String serchWord = ""; 
-	if(request.getParameter("serchWord") != null) { 
-		serchWord = request.getParameter("serchWord");
-	}
-	
-	
-	ArrayList<HashMap<String,Object>> goodsList = GoodsDAO.selectGoodsList(category, serchWord, startRow, rowPerPage);
-	
+		
+		// goods 목록 리스트  
+		String serchWord = ""; 
+		if(request.getParameter("serchWord") != null) { 
+			serchWord = request.getParameter("serchWord");
+		}
+		
+		ArrayList<HashMap<String,Object>> goodsList = GoodsDAO.selectGoodsList(category, serchWord, startRow, rowPerPage);
+
 	
 %>
 

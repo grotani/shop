@@ -33,6 +33,7 @@ public class GoodsDAO {
 			list.add(m);
 		}
 		
+		
 		conn.close();
 		
 		return list;
@@ -119,19 +120,34 @@ public class GoodsDAO {
 		return row;
 	}
 	
-	public static int updateGoodsform (int goodsNo) throws Exception {
-		int row = 0;
+	
+	
+	public static HashMap<String, Object> updateGoodsform (int goodsNo)
+			throws Exception {
+		HashMap<String, Object> m = null;
+	
 		Connection conn = DBHelper.getConnection();
-		String sql = "SELECT category, goods_title goodsTitle, filename, goods_content goodsContent, goods_price goodsPrice, goods_amount goodsAmount, create_date createDate FROM goods WHERE goods_no = ?";
-		PreparedStatement stmt = conn.prepareStatement(sql);
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		String sql = "SELECT goods_no goodsNo, category, goods_title goodsTitle, filename, goods_content goodsContent, goods_price goodsPrice, goods_amount goodsAmount, create_date createDate FROM goods WHERE goods_no = ?";
 		stmt = conn.prepareStatement(sql);
-		stmt.setInt(1,goodsNo);
-		
-		row = stmt.executeUpdate();
-		conn.close();
-		return row;
-
+		stmt.setInt(1, goodsNo);
+		rs = stmt.executeQuery();
+		while(rs.next()) {
+		m = new HashMap<String,Object>();
+		m.put("goodsNo", rs.getInt("goodsNo"));
+		m.put("category", rs.getString("category"));
+		m.put("goodsTitle", rs.getString("goodsTitle"));
+		m.put("filename", rs.getString("filename"));
+		m.put("goodsContent", rs.getString("goodsContent"));
+		m.put("goodsPrice", rs.getInt("goodsPrice"));
+		m.put("goodsAmount", rs.getInt("goodsAmount"));
+		m.put("createDate", rs.getString("createDate"));
 	}
+		conn.close();
+		return m; 
+	}
+
 	
 	public static int page (String category) throws Exception {
 		int totalRow = 0;
@@ -170,7 +186,7 @@ public class GoodsDAO {
 					+ " from goods "
 					+ " where category = ?"					
 					+ " order by goods_no desc "
-					+ " offset ? rows fetch next ? rows only"; // DB수정하기 
+					+ " limit ?,?";
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, category);
 			stmt.setInt(2, startRow);
@@ -179,12 +195,26 @@ public class GoodsDAO {
 		} else {
 			sql = "select goods_no goodsNo, category, goods_title goodsTitle,"
 					+ " goods_price goodsPrice"
-					+ " from goods order by goods_no desc offset ? rows fetch next ? rows only"; // DB수정하기 
+					+ " from goods order by goods_no desc "
+					+ " limit ?,?"; 
 		stmt = conn.prepareStatement(sql);
 		stmt.setInt(1, startRow);
 		stmt.setInt(2, rowPerPage);	
 		}
+		
 		rs = stmt.executeQuery();
+		
+		while(rs.next()) {
+			HashMap<String,Object> m = new HashMap<String,Object>();
+			m.put("goodsNo", rs.getInt("goodsNo"));
+			m.put("category", rs.getString("category"));
+			m.put("goodsTitle", rs.getString("goodsTitle"));
+			m.put("filename", rs.getString("filename"));
+			m.put("goodsPrice", rs.getInt("goodsPrice"));
+			list.add(m);
+		}
+		
+		
 		return list;
 	}
 	
@@ -194,7 +224,7 @@ public class GoodsDAO {
 	
 	public static HashMap<String, Object> selectCustGoodsOne (int goodsNo)
 											throws Exception {
-		HashMap<String, Object> map = null;
+		HashMap<String, Object> m = null;
 		
 		Connection conn = DBHelper.getConnection();
 		PreparedStatement stmt = null;
@@ -204,7 +234,7 @@ public class GoodsDAO {
 		stmt.setInt(1, goodsNo);
 		rs = stmt.executeQuery();
 		while(rs.next()) {
-			HashMap<String,Object> m = new HashMap<String,Object>();
+			m = new HashMap<String,Object>();
 			m.put("goodsNo", rs.getInt("goodsNo"));
 			m.put("category", rs.getString("category"));
 			m.put("goodsTitle", rs.getString("goodsTitle"));
@@ -214,6 +244,27 @@ public class GoodsDAO {
 			m.put("goodsAmount", rs.getInt("goodsAmount"));
 		}
 		conn.close();
-		return map; 
+		return m; 
+	}
+	
+	// 카테고리 목록 개수
+	// 호출 : customer / custGoodsList.jsp
+	// param : void
+	// return : ArrayList
+	public static ArrayList<HashMap<String,Object>> selectCategoryCount () throws Exception{
+		ArrayList<HashMap<String,Object>> list = new ArrayList<HashMap<String,Object>>();
+		Connection conn = DBHelper.getConnection();
+		String sql = "select category, count(*) cnt from goods  GROUP BY category ORDER BY category ASC";
+		PreparedStatement stmt = conn.prepareStatement(sql);
+		ResultSet rs = stmt.executeQuery();
+	
+		while(rs.next()) {
+			HashMap<String,Object> m = new HashMap<String,Object>();
+			m.put("category", rs.getString("category"));
+			m.put("cnt", rs.getInt("cnt"));
+			list.add(m);
+		}
+		conn.close();
+		return list;
 	}
 }

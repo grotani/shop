@@ -118,4 +118,26 @@ public class EmpDAO {
 		   
 	   }
 	   
+	   // 직원 권한변경 SQL 관리자만이 가능함
+	   // 호출 : modifyEmpActive.jsp
+	   // return : int (권한변경실패 0 , 권한변경성공 1)
+	   public static int modifyEmp(String active, String empId) throws Exception {
+			
+			int row = 0 ;
+			Connection conn = DBHelper.getConnection();
+			String sql = "update emp set active = ? where emp_id = ?";
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			if(active.equals("ON")){
+				stmt.setString(1,"OFF");
+			}else if(active.equals("OFF")){
+				stmt.setString(1,"ON");
+			}
+			stmt.setString(2,empId);
+			
+			row = stmt.executeUpdate(); 
+			
+			conn.close();
+			return row;
+		}
+	   
 	}

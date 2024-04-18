@@ -11,11 +11,8 @@
 	}	
 %>
 <%
-	// DB 연결
-	Class.forName("org.mariadb.jdbc.Driver");
-	Connection conn = DriverManager.getConnection("jdbc:mariadb://127.0.0.1:3306/shop","root","java1234");
-
-	// 페이징 연결
+	
+		// 페이징 연결
 		int currentPage = 1;
 		if(request.getParameter("currentPage")!= null) {
 			currentPage = Integer.parseInt(request.getParameter("currentPage"));
@@ -38,46 +35,14 @@
 %>
 
 <%
-	String sql1 = "select category, count(*) cnt from goods  GROUP BY category ORDER BY category ASC";
-	PreparedStatement stmt1 = null;
-	ResultSet rs1= null;
-	stmt1 = conn.prepareStatement(sql1);
-	rs1 = stmt1.executeQuery();
+		// 카테고리 목록 개수
+		ArrayList<HashMap<String,Object>> categoryList = GoodsDAO.selectCategoryCount();
+		System.out.println(categoryList);
 	
-	ArrayList<HashMap<String,Object>> categoryList = 
-		new ArrayList<HashMap<String,Object>>();
-	while(rs1.next()) {
-		HashMap<String,Object> m = new HashMap<String,Object>();
-		m.put("category", rs1.getString("category"));
-		m.put("cnt", rs1.getInt("cnt"));
-		categoryList.add(m);
 		
-	}
 	
+		
 		// goods 목록 리스트  
-		String sql2 = "select goods_no goodsNo, category, goods_title goodsTitle, filename, goods_price goodsPrice from goods where category Like ? limit ?,?";
-			
-		PreparedStatement stmt2 = null;
-		ResultSet rs2 = null;
-		stmt2 = conn.prepareStatement(sql2);
-		stmt2.setString(1,"%"+category+"%");
-		stmt2.setInt(2, startRow);
-		stmt2.setInt(3, rowPerPage);
-		rs2 = stmt2.executeQuery();
-		
-		ArrayList<HashMap<String,Object>> list
-		=new ArrayList<HashMap<String,Object>>();
-		while(rs2.next()) {
-			HashMap<String,Object> m2 = new HashMap<String,Object>();
-			m2.put("goodsNo", rs2.getString("goodsNo"));
-			m2.put("category", rs2.getString("category"));
-			m2.put("goodsTitle", rs2.getString("goodsTitle"));
-			m2.put("filename", rs2.getString("filename"));
-			m2.put("goodsPrice", rs2.getInt("goodsPrice"));
-			list.add(m2);
-			
-		}
-		
 		String serchWord = ""; 
 		if(request.getParameter("serchWord") != null) { 
 			serchWord = request.getParameter("serchWord");
@@ -118,6 +83,13 @@
 <div>
 	<jsp:include page="/customer/inc/customerMenu.jsp"></jsp:include>
 </div>
+<!-- 검색창 -->
+	<div class="col-md-6">
+	    <form method="get" action="/shop/customer/custGoodsList.jsp" class="input-group mb-3">
+	        <input type="text" class="form-control" placeholder="상품 검색" aria-label="Recipient's username" aria-describedby="button-addon2" name="serchWord">
+	        <button class="btn btn-dark" type="submit" id="button-addon2">검색</button>
+	    </form>
+	</div>
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
@@ -171,7 +143,6 @@
                                 <div class="card-body">
                                     <h5 class="card-title"><%= m.get("goodsTitle") %></h5>
                                     <p class="card-text">가격: <%= String.format("%,d", m.get("goodsPrice")) %>원</p>
-                                    <a href="#" class="btn btn-primary">구매하기</a>
                                 </div>
                             </div>
                         </div>
