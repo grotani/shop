@@ -14,6 +14,9 @@
 	System.out.println(goodsNo +"<==상품번호");
 	
 	HashMap<String, Object> goodsOne = GoodsDAO.selectCustGoodsOne(goodsNo);
+	
+	
+	
 %>
 <!DOCTYPE html>
 <html>
@@ -48,23 +51,29 @@
 		<jsp:include page="/customer/inc/customerMenu.jsp"></jsp:include>
 	</div>
 	<h1>상품상세</h1>
-		<div class="row">
-			<div class="col-md-6">
-				<div class="card">
-					<div class="card-body">
-						<ul class="list-group list-group-flush">
-							<li class="list-group-item"> <img src = "/shop/upload/<%=(String)(goodsOne.get("filename"))%>" width = 200></li>
-							<li class="list-group-item">카테고리: <%=(String)(goodsOne.get("category"))%></li>
-							<li class="list-group-item">상품명: <%=(String)(goodsOne.get("goodsTitle"))%></li>
-							<li class="list-group-item">상품 가격: <%= String.format("%,d",goodsOne.get("goodsPrice"))%>원</li>
-							<li class="list-group-item">상품 설명: <%=(String)(goodsOne.get("goodsContent"))%></li>
-							<li class="list-group-item">상품 수량: <%=(Integer)(goodsOne.get("goodsAmount"))%></li>
-							
-						</ul>
-						<a href="/shop/customer/ordersGoodsAction.jsp?goodsNo=<%=goodsNo%>&goodsAmount=<%=(Integer)goodsOne.get("goodsAmount")%>" class="btn btn-primary">주문하기</a>
-					</div>				
+		<form method="post" action="/shop/customer/ordersGoodsAction.jsp?goodsNo=<%=goodsNo%>&goodsAmount=<%=(Integer)goodsOne.get("goodsAmount")%>">
+			<div class="row">
+				<div class="col-md-6">
+					<div class="card">
+						<div class="card-body">
+							<ul class="list-group list-group-flush">
+								<li class="list-group-item"> <img src = "/shop/upload/<%=(String)(goodsOne.get("filename"))%>" width = 200></li>
+								<li class="list-group-item">카테고리: <%=(String)(goodsOne.get("category"))%></li>
+								<li class="list-group-item">상품명: <%=(String)(goodsOne.get("goodsTitle"))%></li>								
+								<li class="list-group-item">상품 설명: <%=(String)(goodsOne.get("goodsContent"))%></li>
+								<li class="list-group-item">상품 가격: <%= String.format("%,d",goodsOne.get("goodsPrice"))%>원</li>
+								<li class="list-group-item">
+									상품 수량선택: <input type="number" name="totalAmount">
+								</li>
+								<li class="list-group-item">
+									주소입력: <input type="text" name="addres">
+								</li>															
+							</ul>
+								<button type="submit">주문하기</button>
+						</div>				
+					</div>
 				</div>
 			</div>
-		</div>
+		</form>
 </body>
 </html>
