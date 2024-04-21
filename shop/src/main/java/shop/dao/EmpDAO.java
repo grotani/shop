@@ -46,7 +46,7 @@ public class EmpDAO {
 	      return resultMap;
 	   }
 	   
-	   
+	   // empList 페이징
 	   public static int page () throws Exception {
 		   int totalRow = 0;
 		   

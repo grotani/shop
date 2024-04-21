@@ -23,7 +23,9 @@
             	<li class="nav-item">
             		<a class="nav-link" href="/shop/customer/custGoodsList.jsp">상품목록</a>
             	</li>
-            	
+            	<li class="nav-item">
+            		 <a class="nav-link" href="/shop/customer/orderCheck.jsp?mail=<%= loginMember.get("mail") %>">주문목록</a>
+            	</li>
             	<li>
                     <a  class="nav-link" href="/shop/customer/customerOne.jsp?name=<%= loginMember.get("name") %>&mail=<%=loginMember.get("mail")%>"><%= loginMember.get("name") %>님 반갑습니다</a>
             	</li>

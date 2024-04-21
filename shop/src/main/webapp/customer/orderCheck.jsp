@@ -62,40 +62,112 @@
 	</style>
 </head>
 <body class="container font">
+<!-- 메인메뉴 -->
+    <div>
+        <jsp:include page="/customer/inc/customerMenu.jsp"></jsp:include>
+    </div>
 
 <div class="d-flex justify-content-end"></div>
-	<h1>주문목록</h1>
-	<div class="table-responsive">
-        <table class="table table-striped">
-			<thead>
-				<tr>
-		            <th scope="col">주문번호</th>
-		            <th scope="col">이메일</th>
-		            <th scope="col">상품명</th>
-		            <th scope="col">상품수량</th>
-		            <th scope="col">상품가격</th>
-		            <th scope="col">배송지</th>
-		            <th scope="col">주문상태</th>    
-		        </tr>
-		     </thead>
-            <tbody>    
-				<%
-					for(HashMap<String,Object> m : checkOne) {
-				%>
-					<tr>
-						<td><%=(Integer)(m.get("ordersNo"))%></td>
-						<td><%=(String)(m.get("mail"))%></td>
-						<td><%=(String)(m.get("goodsTitle"))%></td>
-						<td><%=(Integer)(m.get("totalAmount"))%></td>
-						<td><%=(Integer)(m.get("totalPrice"))%></td>
-						<td><%=(String)(m.get("addres"))%></td>
-						<td><%=(String)(m.get("state"))%></td>
-					</tr>
-					<%
-						}
-					%>
-		     </tbody>
-        </table>
-    </div>			
+<h1 class="mt-4 mb-3">주문 목록</h1>
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">주문번호</th>
+                <th scope="col">이메일</th>
+                <th scope="col">상품명</th>
+                <th scope="col">상품수량</th>
+                <th scope="col">상품가격</th>
+                <th scope="col">배송지</th>
+                <th scope="col">주문상태</th>
+                <th scope="col">리뷰쓰기</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for (HashMap<String, Object> m : checkOne) { %>
+                <tr>
+                    <td><%= m.get("ordersNo") %></td>
+                    <td><%= m.get("mail") %></td>
+                    <td><%= m.get("goodsTitle") %></td>
+                    <td><%= m.get("totalAmount") %></td>
+                    <td><%= m.get("totalPrice") %></td>
+                    <td><%= m.get("addres") %></td>
+                    <td>
+                        <% 
+                            String currentState = (String) m.get("state");
+                            if ("배송중".equals(currentState)) { %>
+                                <a href="/shop/customer/modifyOrderState.jsp?state=배송중&ordersNo=<%= m.get("ordersNo") %>">
+                                    <%= currentState %>
+                                </a>
+                            <% } else { %>
+                                <%= currentState %>
+                            <% } %>
+                    </td>
+                    <td>
+                       		<% if ("배송완료".equals(currentState)) { 
+                            int ordersNo = (Integer) m.get("ordersNo");
+                            if (CommentDAO.hasComment(ordersNo)) { %>
+                                <button type="button" class="btn btn-secondary" disabled>후기 작성 완료</button>
+                            <% } else { %>
+                                <form method="post" action="/shop/customer/addCommentACtion.jsp" >
+                                    <input type="hidden" name="ordersNo" value="<%= ordersNo %>">
+                                    <label for="score">평점:</label>
+                                    <select name="score" id="score" class="form-select">
+                                        <option value="5">5</option>
+                                        <option value="4">4</option>
+                                        <option value="3">3</option>
+                                        <option value="2">2</option>
+                                        <option value="1">1</option>
+                                    </select>
+                                    <br>
+                                    <label for="content">내용:</label>
+                                    <textarea name="content" id="content" cols="30" rows="5" class="form-control"></textarea>
+                                    <br>
+                                    <button type="submit" class="btn btn-primary">후기 작성</button>
+                                </form>
+                            <% }
+                        } else { %>
+                            <button type="button" class="btn btn-danger" disabled>후기 작성 불가</button>
+                        <% } %>
+                    </td>
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+</div>
+<!-- 페이징 버튼 -->
+	<nav aria-label="Page navigation example">
+		<ul class="pagination justify-content-end">
+		<%
+			if(currentPage>1) {
+		%>
+			<li class="page-item">
+				<a class="page-link " href="/shop/customer/orderCheck.jsp?currentPage=1">처음페이지</a> 
+			</li>
+			<li class="page-item">
+				<a class="page-link" href="/shop/customer/orderCheck.jsp?"<%=currentPage-1%>">이전페이지</a> 
+			</li>
+		<%
+			} else {
+		%>
+			<li class="page-item disabled">
+				<a class="page-link" href="/shop/customer/orderCheck.jsp?currentPage=1">처음페이지</a> 
+			</li>
+			<li class="page-item disabled">
+				<a class="page-link" href="/shop/customer/orderCheck.jsp?"<%=currentPage-1%>">이전페이지</a> 
+			</li>
+		<%		
+			} if (currentPage < lastPage) {
+		%>
+			<li class="page-item">
+				<a class="page-link" href="/shop/customer/orderCheck.jsp?currentPage=<%=currentPage+1%>">다음페이지</a> 
+			</li>
+			<li class="page-item">
+				<a class="page-link" href="/shop/customer/orderCheck.jsp?currentPage=<%=lastPage%>">마지막페이지</a> 
+			</li>
+		<% 		
+			}
+		%>
+		</ul>
 </body>
 </html>

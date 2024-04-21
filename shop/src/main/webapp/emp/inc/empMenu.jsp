@@ -24,6 +24,9 @@
 		<li class="nav-item">
 		<a  class="nav-link" href="/shop/emp/customerList.jsp">회원목록</a>
 		</li>
+		<li class="nav-item">
+		<a  class="nav-link" href="/shop/emp/ordersList.jsp">고객주문목록</a>
+		</li>
 		<span>
 			<!-- 개인정보 수정 -->
 			<li class="nav-item">

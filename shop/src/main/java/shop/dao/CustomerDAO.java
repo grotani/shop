@@ -6,8 +6,6 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.eclipse.jdt.internal.compiler.util.CharArrayHashMap;
-
 
 public class CustomerDAO {
 	// 회원가입 메일 중복확인 
