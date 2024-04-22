@@ -4,6 +4,7 @@
 <%@ page import="java.util.*"%>
 <%@ page import="java.io.*" %>
 <%@ page import="java.nio.file.*" %>
+<%@ page import="shop.dao.*" %>
 <%
 	// 인증분기 : 세션 변수 이름 = > loginEmp
 	if(session.getAttribute("loginEmp") == null) { 
@@ -20,6 +21,30 @@
 	
 	
 	ArrayList<HashMap<String, Object>> goodsOne = GoodsDAO.goodsOne(goodsNo); 
+	
+	
+	// 상품후기List 페이징
+	
+	int currentPage = 1;
+	if(request.getParameter("currentPage") != null) {
+		currentPage = Integer.parseInt(request.getParameter("currentPage"));
+	}
+	int rowPerPage = 5;
+	int startRow = ((currentPage-1) * rowPerPage);
+	
+	// totalRow sql
+	
+	int totalRow = CommentDAO.commentPage(goodsNo);
+	System.out.println(totalRow + "<==totalROw");
+	int lastPage = totalRow / rowPerPage;
+	
+	if(totalRow%rowPerPage != 0) {
+		lastPage = lastPage+1;
+	}
+	System.out.println(lastPage + "<==lastPage");
+	
+	// commentList 보여주기 
+	ArrayList<HashMap<String, Object>> selectCommentList = CommentDAO.selectCommentList(goodsNo, startRow, rowPerPage);
 %>
 
 <!-- View Layer -->
@@ -77,6 +102,27 @@
 			}
 		%>
 	</div>
-
+<h2>상품후기</h2>	
+	<div>
+		<%=currentPage %> / <%=lastPage %> page
+	</div>
+	<table class="table border">
+	<tr>
+		<th>별점</th>
+		<th>리뷰</th>
+		<th>작성일</th>
+	</tr>
+	<%
+		for(HashMap<String, Object> m : selectCommentList) {
+	%>
+	<tr>
+		<td><%=(String)(m.get("score")) %></td>
+		<td><%=(String)(m.get("content")) %></td>
+		<td><%=(String)(m.get("createDate")) %></td>
+	</tr>	
+	<% 		
+		}
+	%>
+	</table>
 </body>
 </html>

@@ -86,7 +86,7 @@
 		<a href="/shop/emp/empLogout.jsp" class="btn btn-dark">로그아웃</a>
 	</div>
 	<br>
-	<div>
+		<div>
 			<%=currentPage %> / <%=lastPage %> page
 		</div>
 	
