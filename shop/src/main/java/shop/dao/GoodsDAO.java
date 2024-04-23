@@ -267,4 +267,24 @@ public class GoodsDAO {
 		conn.close();
 		return list;
 	}
+	
+	// 주문하면 goodsAmount수량 빼주기
+	// 호출 : orderGoodsAction.jsp
+	// return : int  (수량빼기 실패 0 , 수량빼기 성공 1)
+	public int updateGoodsAmount (int goodsAmount, int totalAmount, int goodsNo) throws Exception{
+		int row = 0;
+		Connection conn = DBHelper.getConnection();
+		String sql = "update goods set goods_amount = ? + -?, update_date = now()"
+				+ " where goods_no =?";
+		PreparedStatement stmt = conn.prepareStatement(sql);
+		stmt.setInt(1, goodsAmount);
+		stmt.setInt(2, totalAmount);
+		stmt.setInt(3, goodsNo);
+		
+		row = stmt.executeUpdate();
+		conn.close();
+		return row;
+		
+	}
+	
 }
