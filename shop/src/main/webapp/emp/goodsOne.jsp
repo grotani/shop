@@ -66,7 +66,18 @@
 		.font {
 			font-family:'TTHakgyoansimMonggeulmonggeulR';
 		}
-			
+		.star-rating {
+            display: flex;
+        }
+        .star-rating .star {
+            font-size: 2em;
+            color: gray;
+            cursor: pointer;
+        }
+        .star-rating .star.active {
+            color: gold;
+        }
+        	
 </style>
 </head>
 <body class="container font">
@@ -114,7 +125,21 @@
 		for(HashMap<String, Object> m : selectCommentList) {
 	%>
 	<tr>
-		<td><%=(String)(m.get("score")) %></td>
+		 <td>
+                <div class="star-rating">
+                <!-- 상품후기 별모양으로 보여주기 -->
+                    <% 
+                    	int score = Integer.parseInt((String) m.get("score"));
+                        for(int i = 1; i <= 5; i++) {
+                            if(i <= score) { %>
+                                <span class="star active">&#9733;</span>
+                            <% } else { %>
+                                <span class="star">&#9733;</span>
+                            <% }
+                        } 
+                    %>
+                </div>
+            </td>
 		<td><%=(String)(m.get("content")) %></td>
 		<td><%=(String)(m.get("createDate")) %></td>
 	</tr>	

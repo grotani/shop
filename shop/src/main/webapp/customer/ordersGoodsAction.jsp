@@ -17,7 +17,8 @@
 
     // 주문정보
     int goodsNo = Integer.parseInt(request.getParameter("goodsNo")); // 상품번호
-    int totalAmount = Integer.parseInt(request.getParameter("totalAmount")); // 상품수량
+    int goodsAmount = Integer.parseInt(request.getParameter("goodsAmount")); // 상품수량
+    int totalAmount = Integer.parseInt(request.getParameter("totalAmount")); // 상품구매수량
     String addres = request.getParameter("addres"); // 입력한 배송지
     int goodsPrice = Integer.parseInt(request.getParameter("goodsPrice")); //상품가격
     int totalPrice = goodsPrice * totalAmount;  // 상품총가격
@@ -27,18 +28,18 @@
     System.out.println(addres);
     System.out.println(goodsPrice);
     System.out.println(totalPrice);
-%>
 
-<%
-    int row = OrdersDAO.insertOrder(mail, goodsNo, totalAmount, totalPrice, addres);
+    // 주문 처리
+    int orderRow = OrdersDAO.insertOrder(mail, goodsNo, totalAmount, totalPrice, addres);
 
-    if(row == 1) { // 성공
-        System.out.println("주문완료");
+    // 상품 재고 업데이트
+    int updateRow = GoodsDAO.updateGoodsAmount(goodsAmount, totalAmount, goodsNo);
+
+    if (orderRow == 1 && updateRow == 1) { // 주문 및 재고 업데이트 성공
+        System.out.println("주문 및 재고 업데이트 완료");
         response.sendRedirect("/shop/customer/orderCheck.jsp?mail=" + mail);
-    } else { //실패
-        System.out.println("주문실패");
+    } else { // 실패
+        System.out.println("주문 및 재고 업데이트 실패");
         response.sendRedirect("/shop/customer/custGoodsOne.jsp");
     }
-    
-    
 %>
