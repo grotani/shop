@@ -108,7 +108,7 @@
 				<a class="page-link " href="/shop/emp/commentList.jsp?currentPage=1">처음페이지</a> 
 			</li>
 			<li class="page-item">
-				<a class="page-link" href="/shop/emp/commentList.jsp?"<%=currentPage-1%>">이전페이지</a> 
+				<a class="page-link" href="/shop/emp/commentList.jsp?<%=currentPage-1%>">이전페이지</a> 
 			</li>
 		<%
 			} else {
@@ -117,7 +117,7 @@
 				<a class="page-link" href="/shop/emp/commentList.jsp?currentPage=1">처음페이지</a> 
 			</li>
 			<li class="page-item disabled">
-				<a class="page-link" href="/shop/emp/commentList.jsp?"<%=currentPage-1%>">이전페이지</a> 
+				<a class="page-link" href="/shop/emp/commentList.jsp?<%=currentPage-1%>">이전페이지</a> 
 			</li>
 		<%		
 			} if (currentPage < lastPage) {
@@ -131,6 +131,7 @@
 		<% 		
 			}
 		%>
-		</ul>	
+		</ul>
+	</nav>	
 </body>
 </html>

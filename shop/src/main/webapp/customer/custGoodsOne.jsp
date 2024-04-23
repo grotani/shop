@@ -19,7 +19,26 @@
     String mail = (String) session.getAttribute("mail");
     System.out.println(mail +"<==사용자메일");
     
-    
+ 	// 상품후기List 페이징
+ 	int currentPage = 1;
+ 	if(request.getParameter("currentPage") != null) {
+ 		currentPage = Integer.parseInt(request.getParameter("currentPage"));
+ 	}
+ 	int rowPerPage = 5; 
+ 	int startRow = ((currentPage-1) * rowPerPage);
+ 	
+ 	// totalRow sql
+ 	int totalRow = CommentDAO.commentPage(goodsNo);
+ 	System.out.println(totalRow + "<==totalROw");
+ 	
+ 	int lastPage = totalRow / rowPerPage;
+ 	if(totalRow%rowPerPage != 0) {
+ 		lastPage = lastPage+1;
+ 	}
+ 	System.out.println(lastPage + "<==lastPage");
+ 	
+    // 상품후기 List
+    ArrayList<HashMap<String, Object>> selectCommentList = CommentDAO.selectCommentList(goodsNo, startRow, rowPerPage);
 %>
 <!DOCTYPE html>
 <html>
@@ -64,18 +83,43 @@
                         <li class="list-group-item">상품 가격: <%= String.format("%,d", goodsOne.get("goodsPrice")) %>원</li>
                     </ul>
                     <div>
-                        <h2>주문하기</h2>
-                        <form method="post" action="/shop/customer/ordersGoodsAction.jsp">
-                            <ul>
-                                <li class="list-group-item">수량선택: <input type="number" name="totalAmount"></li>
-                                <li class="list-group-item">배송지: <input type="text" name="addres"></li>
-                                <input type="hidden" name="goodsNo" value="<%= goodsNo %>">
-                                <input type="hidden" name="goodsAmount" value="<%= goodsOne.get("goodsAmount") %>">
-                                <input type="hidden" name="goodsPrice" value="<%= goodsOne.get("goodsPrice") %>">
-                                <input type="hidden" name="mail" value="<%= mail %>">
-                                <button type="submit">주문하기</button>
-                            </ul>
-                        </form>
+                    	
+                    	
+						<h2>주문하기</h2>
+						<form method="post" action="/shop/customer/ordersGoodsAction.jsp">
+						    <ul>
+						        <li class="list-group-item">수량선택: <input type="number" name="totalAmount"></li>
+						        <li class="list-group-item">배송지: <input type="text" name="addres"></li>
+						        
+							      <input type="hidden" name="goodsNo" value="<%= goodsNo %>">
+							      <input type="hidden" name="goodsAmount" value="<%= goodsOne.get("goodsAmount") %>">
+							      <input type="hidden" name="goodsPrice" value="<%= goodsOne.get("goodsPrice") %>">
+							      <input type="hidden" name="mail" value="<%= mail %>">
+							      <button type="submit">주문하기</button>
+						    </ul>
+						</form>
+						<h2>상품후기</h2>
+	                    	<div>
+	                    		<%=currentPage %> / <%=lastPage %> page
+	                    	</div>
+                    		<table class="table border">
+                    			<tr>
+                    				<th>별점</th>
+                    				<th>리뷰</th>
+                    				<th>리뷰작성일</th>
+                    			</tr>
+                    			<%
+                    				for(HashMap<String, Object> m : selectCommentList) {
+                    			%>
+	                    				<tr>
+	                    					<td><%=(String)(m.get("score")) %></td>
+	                    					<td><%=(String)(m.get("content")) %></td>
+	                    					<td><%=(String)(m.get("createDate")) %></td>	                    					
+	                    				</tr>
+                    			<% 		
+                    				}
+                    			%>
+                    		</table>
                     </div>
                 </div>
             </div>

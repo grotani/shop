@@ -23,6 +23,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title></title>
+	
 	<style>
 		/* 폰트설정 학교안심 몽글몽글 */
 		@font-face {

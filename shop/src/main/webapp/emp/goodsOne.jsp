@@ -24,20 +24,18 @@
 	
 	
 	// 상품후기List 페이징
-	
 	int currentPage = 1;
 	if(request.getParameter("currentPage") != null) {
 		currentPage = Integer.parseInt(request.getParameter("currentPage"));
 	}
-	int rowPerPage = 5;
+	int rowPerPage = 5; 
 	int startRow = ((currentPage-1) * rowPerPage);
 	
 	// totalRow sql
-	
 	int totalRow = CommentDAO.commentPage(goodsNo);
 	System.out.println(totalRow + "<==totalROw");
-	int lastPage = totalRow / rowPerPage;
 	
+	int lastPage = totalRow / rowPerPage;
 	if(totalRow%rowPerPage != 0) {
 		lastPage = lastPage+1;
 	}
@@ -124,5 +122,40 @@
 		}
 	%>
 	</table>
+	<!-- 페이징 버튼 -->
+	<nav aria-label="Page navigation example">
+		<ul class="pagination justify-content-end">
+		<%
+			if(currentPage>1) {
+		%>
+			<li class="page-item">
+				<a class="page-link " href="/shop/emp/goodsOne.jsp?currentPage=1&goodsNo=<%=goodsNo%>">처음페이지</a> 
+			</li>
+			<li class="page-item">
+				<a class="page-link" href="/shop/emp/goodsOne.jsp?<%=currentPage-1%>&goodsNo=<%=goodsNo%>">이전페이지</a> 
+			</li>
+		<%
+			} else {
+		%>
+			<li class="page-item disabled">
+				<a class="page-link" href="/shop/emp/goodsOne.jsp?currentPage=1&goodsNo=<%=goodsNo%>">처음페이지</a> 
+			</li>
+			<li class="page-item disabled">
+				<a class="page-link" href="/shop/emp/goodsOne.jsp?<%=currentPage-1%>&goodsNo=<%=goodsNo%>">이전페이지</a> 
+			</li>
+		<%		
+			} if (currentPage < lastPage) {
+		%>
+			<li class="page-item">
+				<a class="page-link" href="/shop/emp/goodsOne.jsp?currentPage=<%=currentPage+1%>&goodsNo=<%=goodsNo%>">다음페이지</a> 
+			</li>
+			<li class="page-item">
+				<a class="page-link" href="/shop/emp/goodsOne.jsp?currentPage=<%=lastPage%>&goodsNo=<%=goodsNo%>">마지막페이지</a> 
+			</li>
+		<% 		
+			}
+		%>
+		</ul>
+	</nav>	
 </body>
 </html>

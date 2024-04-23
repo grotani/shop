@@ -12,22 +12,39 @@ public class CommentDAO {
 	// 고객 배송완료 상태 변경되면 리뷰쓰기
 	// 호출 : addCommentForm.jsp
 	// return : int
-	public static int addComment (int score, String content)
-						throws Exception {
-		int row = 0;
-		Connection conn = DBHelper.getConnection();
-		String sql = "insert into comment (orders_no, score, content, update_date, create_date)"
-				+ " select o.orders_no, ?, ?, NOW(), NOW()"
-				+ " from orders o"
-				+ " left join comment c ON o.orders_no = c.orders_no"
-				+ " where o.state = '배송완료' AND c.orders_no IS NULL";
-		PreparedStatement stmt = conn.prepareStatement(sql);
-		stmt.setInt(1, score);
-		stmt.setString(2, content);
-		row = stmt.executeUpdate();
-		
-		conn.close();
-		return row;
+	public static int addComment(int ordersNo, int score, String content) throws Exception {
+	    int row = 0;
+	    Connection conn = DBHelper.getConnection();
+	    
+	    // 주문번호로 이미 후기가 존재하는지 확인
+	    String checkSql = "SELECT COUNT(*) AS count FROM comment WHERE orders_no = ?";
+	    PreparedStatement checkStmt = conn.prepareStatement(checkSql);
+	    checkStmt.setInt(1, ordersNo);
+	    ResultSet rs = checkStmt.executeQuery();
+	    rs.next();
+	    int count = rs.getInt("count");
+	    checkStmt.close();
+	    
+	    // 이미 후기가 존재하면 추가하지 않음
+	    if (count > 0) {
+	        conn.close();
+	        return row;
+	    }
+	    
+	    // 주문번호가 존재하지 않고, 주문이 배송완료 상태인 경우에만 후기를 추가
+	    String sql = "INSERT INTO comment (orders_no, score, content, update_date, create_date)"
+	               + " SELECT ?, ?, ?, NOW(), NOW()"
+	               + " FROM orders o"
+	               + " WHERE o.orders_no = ? AND o.state = '배송완료'";
+	    PreparedStatement stmt = conn.prepareStatement(sql);
+	    stmt.setInt(1, ordersNo);
+	    stmt.setInt(2, score);
+	    stmt.setString(3, content);
+	    stmt.setInt(4, ordersNo);
+	    row = stmt.executeUpdate();
+	    
+	    conn.close();
+	    return row;
 	}
 	
 		// 후기 작성된 주문번호 확인 하여 후기작성완료 처리 해주기

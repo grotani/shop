@@ -113,7 +113,7 @@
             <h2>카테고리</h2>
             <ul class="list-group">
                 <li class="list-group-item"><a href="/shop/emp/goodsList.jsp">전체</a></li>
-                <% for(HashMap m : categoryList) { %>
+                <% for(HashMap <String,Object> m : categoryList) { %>
                 <li class="list-group-item">
                     <a href="/shop/emp/goodsList.jsp?category=<%=(String)(m.get("category"))%>">
                         <%=(String)(m.get("category"))%> (<%=(Integer)(m.get("cnt"))%>)

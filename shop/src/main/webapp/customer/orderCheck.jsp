@@ -58,7 +58,24 @@
 		.font {
 			font-family:'TTHakgyoansimMonggeulmonggeulR';
 		}
-			
+		
+		.star-rating {
+	        display: flex;
+	    }
+	
+	    .star-rating input[type="radio"] {
+	        display: none;
+	    }
+	
+	    .star-rating label.star {
+	        font-size: 2em;
+	        color: gray;
+	        cursor: pointer;
+	    }
+	
+	    .star-rating input[type="radio"]:checked ~ label.star {
+	        color: gold;
+	    }
 	</style>
 </head>
 <body class="container font">
@@ -111,14 +128,14 @@
                             <% } else { %>
                                 <form method="post" action="/shop/customer/addCommentACtion.jsp" >
                                     <input type="hidden" name="ordersNo" value="<%= ordersNo %>">
-                                    <label for="score">평점:</label>
+                                	<label for="score">평점:</label>
                                     <select name="score" id="score" class="form-select">
                                         <option value="5">5</option>
                                         <option value="4">4</option>
                                         <option value="3">3</option>
                                         <option value="2">2</option>
                                         <option value="1">1</option>
-                                    </select>
+                                    </select>									                                                                                                  
                                     <br>
                                     <label for="content">내용:</label>
                                     <textarea name="content" id="content" cols="30" rows="5" class="form-control"></textarea>
@@ -126,7 +143,7 @@
                                     <button type="submit" class="btn btn-primary">후기 작성</button>
                                 </form>
                             <% }
-                        } else { %>
+                     	  		 } else { %>
                             <button type="button" class="btn btn-danger" disabled>후기 작성 불가</button>
                         <% } %>
                     </td>
@@ -142,32 +159,33 @@
 			if(currentPage>1) {
 		%>
 			<li class="page-item">
-				<a class="page-link " href="/shop/customer/orderCheck.jsp?currentPage=1">처음페이지</a> 
+				<a class="page-link " href="/shop/customer/orderCheck.jsp?currentPage=1&mail=<%=mail%>">처음페이지</a> 
 			</li>
 			<li class="page-item">
-				<a class="page-link" href="/shop/customer/orderCheck.jsp?"<%=currentPage-1%>">이전페이지</a> 
+				<a class="page-link" href="/shop/customer/orderCheck.jsp?<%=currentPage-1%>&mail=<%=mail%>">이전페이지</a> 
 			</li>
 		<%
 			} else {
 		%>
 			<li class="page-item disabled">
-				<a class="page-link" href="/shop/customer/orderCheck.jsp?currentPage=1">처음페이지</a> 
+				<a class="page-link" href="/shop/customer/orderCheck.jsp?currentPage=1&mail=<%=mail%>">처음페이지</a> 
 			</li>
 			<li class="page-item disabled">
-				<a class="page-link" href="/shop/customer/orderCheck.jsp?"<%=currentPage-1%>">이전페이지</a> 
+				<a class="page-link" href="/shop/customer/orderCheck.jsp?<%=currentPage-1%>&mail=<%=mail%>">이전페이지</a> 
 			</li>
 		<%		
 			} if (currentPage < lastPage) {
 		%>
 			<li class="page-item">
-				<a class="page-link" href="/shop/customer/orderCheck.jsp?currentPage=<%=currentPage+1%>">다음페이지</a> 
+				<a class="page-link" href="/shop/customer/orderCheck.jsp?currentPage=<%=currentPage+1%>&mail=<%=mail%>">다음페이지</a> 
 			</li>
 			<li class="page-item">
-				<a class="page-link" href="/shop/customer/orderCheck.jsp?currentPage=<%=lastPage%>">마지막페이지</a> 
+				<a class="page-link" href="/shop/customer/orderCheck.jsp?currentPage=<%=lastPage%>&mail=<%=mail%>">마지막페이지</a> 
 			</li>
 		<% 		
 			}
 		%>
 		</ul>
+	</nav>	
 </body>
 </html>

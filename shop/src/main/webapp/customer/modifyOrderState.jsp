@@ -17,10 +17,10 @@
         response.sendRedirect("/shop/customer/loginForm.jsp");
         return;
     }
-
-    // 주문번호와 상태가 null이 아닌지 확인
-    if (orderNoParam != null && state != null) {
-        int ordersNo = Integer.parseInt(orderNoParam);
+	
+	    // 주문번호와 상태가 null이 아닌지 확인
+	    if (orderNoParam != null && state != null) {
+	        int ordersNo = Integer.parseInt(orderNoParam);
 
         // 주문상태가 "배송중"일 때만 "배송완료"로 변경
         if ("배송중".equals(state)) {

@@ -39,4 +39,6 @@
         System.out.println("주문실패");
         response.sendRedirect("/shop/customer/custGoodsOne.jsp");
     }
+    
+    
 %>
