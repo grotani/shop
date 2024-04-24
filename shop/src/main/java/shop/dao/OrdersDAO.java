@@ -44,7 +44,7 @@ public class OrdersDAO {
 		ArrayList<HashMap<String, Object>> list
 			= new ArrayList<HashMap<String, Object>>();
 		Connection conn = DBHelper.getConnection();
-		String sql = "select o.orders_no ordersNo, o.mail mail,g.goods_title goodsTitle, "
+		String sql = "select o.orders_no ordersNo, o.mail mail,g.goods_title goodsTitle, o.goods_no goodsNo, "
 				+ " o.total_amount totalAmount, "
 				+ " o.total_price totalPrice, "
 				+ " o.addres, o.state "
@@ -62,6 +62,7 @@ public class OrdersDAO {
 		ResultSet rs = stmt.executeQuery();
 		while (rs.next()) {
 			HashMap<String, Object> m = new HashMap<String, Object>();
+			m.put("goodsNo", rs.getInt("goodsNo"));
 			m.put("ordersNo", rs.getInt("ordersNo"));
 			m.put("mail", rs.getString("mail"));
 			m.put("goodsTitle", rs.getString("goodsTitle"));

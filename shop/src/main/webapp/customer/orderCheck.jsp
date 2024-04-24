@@ -122,11 +122,13 @@
                     </td>
                     <td>
                        		<% if ("배송완료".equals(currentState)) { 
+                       		int goodsNo = (Integer)(m.get("goodsNo"));	
                             int ordersNo = (Integer) m.get("ordersNo");
                             if (CommentDAO.hasComment(ordersNo)) { %>
                                 <button type="button" class="btn btn-secondary" disabled>후기 작성 완료</button>
                             <% } else { %>
                                 <form method="post" action="/shop/customer/addCommentACtion.jsp" >
+                                	<input type="hidden" name="goodsNo" value="<%= goodsNo %>">
                                     <input type="hidden" name="ordersNo" value="<%= ordersNo %>">
                                 	<label for="score">별점:</label>
 										<div class="star-rating">                                      

@@ -19,7 +19,7 @@
 	int goodsNo= Integer.parseInt(request.getParameter("goodsNo"));
 	System.out.println(goodsNo + "이미지");
 	
-	
+	// 굿즈 상세정보 가져오기 
 	ArrayList<HashMap<String, Object>> goodsOne = GoodsDAO.goodsOne(goodsNo); 
 	
 	

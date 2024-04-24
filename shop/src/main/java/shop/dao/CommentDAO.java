@@ -12,7 +12,7 @@ public class CommentDAO {
 	// 고객 배송완료 상태 변경되면 리뷰쓰기
 	// 호출 : addCommentForm.jsp
 	// return : int
-	public static int addComment(int ordersNo, int score, String content) throws Exception {
+	public static int addComment(int goodsNo, int ordersNo, int score, String content) throws Exception {
 	    int row = 0;
 	    Connection conn = DBHelper.getConnection();
 	    
@@ -31,16 +31,17 @@ public class CommentDAO {
 	        return row;
 	    }
 	    
-	    // 주문번호가 존재하지 않고, 주문이 배송완료 상태인 경우에만 후기를 추가
-	    String sql = "INSERT INTO comment (orders_no, score, content, update_date, create_date)"
-	               + " SELECT ?, ?, ?, NOW(), NOW()"
+	    // 주문번호가 존재하고, 주문이 배송완료 상태인 경우에만 후기를 추가
+	    String sql = "INSERT INTO comment (goods_no, orders_no, score, content, update_date, create_date)"
+	               + " SELECT ?, ?, ?, ?, NOW(), NOW()"
 	               + " FROM orders o"
 	               + " WHERE o.orders_no = ? AND o.state = '배송완료'";
 	    PreparedStatement stmt = conn.prepareStatement(sql);
-	    stmt.setInt(1, ordersNo);
-	    stmt.setInt(2, score);
-	    stmt.setString(3, content);
-	    stmt.setInt(4, ordersNo);
+	    stmt.setInt(1, goodsNo);
+	    stmt.setInt(2, ordersNo);
+	    stmt.setInt(3, score);
+	    stmt.setString(4, content);
+	    stmt.setInt(5, ordersNo);
 	    row = stmt.executeUpdate();
 	    
 	    conn.close();
@@ -158,8 +159,10 @@ public class CommentDAO {
 		   int totalRow = 0;
 		   
 		   Connection conn = DBHelper.getConnection();
-		   String SqlPage = "SELECT COUNT(*) FROM comment INNER JOIN goods g"
-		   		+  " WHERE g.goods_no = ?";
+		  
+		   String SqlPage = "SELECT COUNT(*) FROM comment"
+		   		+ " INNER JOIN goods ON comment.goods_no = goods.goods_no"
+		   		+ " WHERE goods.goods_no = ?";
 		   PreparedStatement stmt = conn.prepareStatement(SqlPage);
 		   stmt.setInt(1,goodsNo);
 		   ResultSet rs = stmt.executeQuery();

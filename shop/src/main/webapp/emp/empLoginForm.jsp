@@ -1,10 +1,11 @@
+<%@page import="java.util.HashMap"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <%
 	// 인증분기 : 세션 변수 이름 = > loginEmp
 	
 	
-	String loginEmp = (String)(session.getAttribute("loginEmp"));
+	HashMap<String, Object> loginEmp = (HashMap<String, Object>)(session.getAttribute("loginEmp"));
 	System.out.println(loginEmp + "<=로그인ID");
 	
 	

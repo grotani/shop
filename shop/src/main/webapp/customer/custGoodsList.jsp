@@ -10,8 +10,7 @@
 		return;
 	}	
 %>
-<%
-	
+<%	
 		// 페이징 연결
 		int currentPage = 1;
 		if(request.getParameter("currentPage")!= null) {
@@ -120,7 +119,7 @@
                 <h3>카테고리</h3>
                 <ul class="list-group">
                     <li class="list-group-item"><a href="/shop/customer/custGoodsList.jsp">전체</a></li>
-                    <% for(HashMap m : categoryList) { %>
+                    <% for(HashMap<String, Object> m : categoryList) { %>
                         <li class="list-group-item">
                             <a href="/shop/customer/custGoodsList.jsp?category=<%=(String)(m.get("category"))%>">
                                 <%=(String)(m.get("category"))%> (<%=(Integer)(m.get("cnt"))%>)

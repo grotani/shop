@@ -90,16 +90,16 @@
 	            <td><%= m.get("totalPrice") %></td>
 	            <td><%= m.get("addres") %></td>	                                                    
           		<td>
-                        <% 
-                            String currentState = (String) m.get("state");
-                            if ("결제완료".equals(currentState)) { %>
-                                <a href="/shop/emp/modifyOrderState.jsp?state=결제완료&ordersNo=<%= m.get("ordersNo") %>">
-                                    <%= currentState %>
-                                </a>
+                       		<% 
+	                            String currentState = (String) m.get("state");
+	                            if ("결제완료".equals(currentState)) { %>
+	                                <a href="/shop/emp/modifyOrderState.jsp?state=결제완료&ordersNo=<%= m.get("ordersNo") %>">
+                                   	<%= currentState %>
+                               		</a>
                             <% } else { %>
                                 <%= currentState %>
                             <% } %>
-                    </td>
+                </td>
                 <td><%= m.get("updateDate") %></td> 	
           	</tr>  
           			       
@@ -117,7 +117,7 @@
 				<a class="page-link " href="/shop/emp/ordersList.jsp?currentPage=1">처음페이지</a> 
 			</li>
 			<li class="page-item">
-				<a class="page-link" href="/shop/emp/ordersList.jsp?"<%=currentPage-1%>">이전페이지</a> 
+				<a class="page-link" href="/shop/emp/ordersList.jsp?"<%=currentPage-1%>>이전페이지</a> 
 			</li>
 		<%
 			} else {
@@ -126,7 +126,7 @@
 				<a class="page-link" href="/shop/emp/ordersList.jsp?currentPage=1">처음페이지</a> 
 			</li>
 			<li class="page-item disabled">
-				<a class="page-link" href="/shop/emp/ordersList.jsp?"<%=currentPage-1%>">이전페이지</a> 
+				<a class="page-link" href="/shop/emp/ordersList.jsp?"<%=currentPage-1%>>이전페이지</a> 
 			</li>
 		<%		
 			} if (currentPage < lastPage) {
@@ -141,5 +141,6 @@
 			}
 		%>
 		</ul>
+	</nav>
 </body>
 </html>

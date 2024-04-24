@@ -15,12 +15,12 @@
         response.sendRedirect("/shop/customer/loginForm.jsp");
         return;
     }
-
+	int goodsNo = Integer.parseInt(request.getParameter("goodsNo"));
     int ordersNo = Integer.parseInt(request.getParameter("ordersNo"));
     int score = Integer.parseInt(request.getParameter("score"));
     String content = request.getParameter("content");
 
-    int rowsAffected = CommentDAO.addComment(ordersNo, score, content);
+    int rowsAffected = CommentDAO.addComment(goodsNo, ordersNo, score, content);
 
     if (rowsAffected > 0) {
         // 후기 추가 성공 시 주문 목록 페이지로 이동
