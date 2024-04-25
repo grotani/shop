@@ -93,7 +93,7 @@
                        		<% 
 	                            String currentState = (String) m.get("state");
 	                            if ("결제완료".equals(currentState)) { %>
-	                                <a href="/shop/emp/modifyOrderState.jsp?state=결제완료&ordersNo=<%= m.get("ordersNo") %>">
+	                                <a href="/shop/emp/modifyOrderState.jsp?state=결제완료&ordersNo=<%= m.get("ordersNo") %>" class="btn btn-dark">
                                    	<%= currentState %>
                                		</a>
                             <% } else { %>

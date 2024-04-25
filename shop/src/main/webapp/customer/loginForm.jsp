@@ -64,7 +64,8 @@
                 <label for="password" class="form-label">비밀번호</label>
                 <input type="password" class="form-control" id="password" name="pw" required>
             </div>
-            <button type="submit" class="btn btn-primary btn-block">로그인</button>
+            <button type="submit" class="btn btn-dark btn-block">로그인</button>
+            <a href="/shop/customer/addCustomerForm.jsp" class="btn btn-dark btn-block">회원가입</a>
         </form>
     </div>
 </body>

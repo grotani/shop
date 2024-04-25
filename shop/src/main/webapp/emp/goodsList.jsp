@@ -88,7 +88,10 @@
 		
 		.list-group-item a {
         color: black; /* 텍스트 색상을 검은색으로 설정합니다. */
-    }
+  			  }
+  	  	.product-cards .card {
+   		height: 100%; /* 필요에 따라 높이를 조절하세요 */
+		}	
 </style>
 </head>
 <body class="container font">
@@ -135,19 +138,19 @@
         <!-- 상품 목록 -->
         <div class="col-md-9">
             <h1 class="text-center">상품 목록</h1>
-            <div class="row">
+            <div class="row product-cards">
                 <% for(HashMap<String,Object> m : goodsList) { %>
                 <div class="col-md-4">
                     <div class="card mb-4">
                     <div>
-                   		 <a href="/shop/emp/goodsOne.jsp?goodsNo=<%=(Integer) m.get("goodsNo") %>">
+                   			<a href="/shop/emp/goodsOne.jsp?goodsNo=<%=(Integer) m.get("goodsNo") %>">
                         	<img src="/shop/upload/<%= m.get("filename") %>" class="card-img-top" alt="상품 이미지"></a>
                      </div> 
-                        <div class="card-body">
+                      <div class="card-body">
                             <h5 class="card-title"><%= m.get("goodsTitle") %></h5>
                    			<p class="card-text">가격: <%= String.format("%,d", m.get("goodsPrice")) %>원</p> <!-- 가격에 쉼표 추가 -->
 							<a href="/shop/emp/deleteGoodsAction.jsp?goodsNo=<%= m.get("goodsNo") %>&category=<%= m.get("category") %>&filename=<%= m.get("filename") %>" class="btn btn-danger">상품 삭제</a>
-	                        </div>
+	                   </div>
                     </div>
                 </div>
                 <% } %>

@@ -41,6 +41,10 @@ public class OrdersDAO {
 	// return : orders & goods 테이블 join 결과를  ArrayList로  
 	public static ArrayList<HashMap<String, Object>> selectOrderListByCustomer(
 			String mail, int startRow, int rowPerPage) throws Exception {
+		
+		// 매개값 디버깅 
+		System.out.println(mail + "<==OrdersDAO.selectOrderListByCustomer param mail");
+		
 		ArrayList<HashMap<String, Object>> list
 			= new ArrayList<HashMap<String, Object>>();
 		Connection conn = DBHelper.getConnection();

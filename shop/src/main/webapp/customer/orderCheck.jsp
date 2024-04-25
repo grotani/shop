@@ -113,7 +113,7 @@
                         <% 
                             String currentState = (String) m.get("state");
                             if ("배송중".equals(currentState)) { %>
-                                <a href="/shop/customer/modifyOrderState.jsp?state=배송중&ordersNo=<%= m.get("ordersNo") %>">
+                                <a href="/shop/customer/modifyOrderState.jsp?state=배송중&ordersNo=<%= m.get("ordersNo") %>" class="btn btn-dark">
                                     <%= currentState %>
                                 </a>
                             <% } else { %>
@@ -147,7 +147,7 @@
                                     <label for="content">내용:</label>
                                     <textarea name="content" id="content" cols="30" rows="5" class="form-control"></textarea>
                                     <br>
-                                    <button type="submit" class="btn btn-primary">후기 작성</button>
+                                    <button type="submit" class="btn btn-dark">후기 작성</button>
                                 </form>
                             <% }
                      	  		 } else { %>

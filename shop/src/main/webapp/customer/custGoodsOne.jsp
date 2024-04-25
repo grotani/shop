@@ -145,6 +145,41 @@
                     				}
                     			%>
                     		</table>
+					<!-- 페이징 버튼 -->
+					<nav aria-label="Page navigation example">
+						<ul class="pagination justify-content-end">
+						<%
+							if(currentPage>1) {
+						%>
+							<li class="page-item">
+								<a class="page-link " href="/shop/emp/goodsOne.jsp?currentPage=1&goodsNo=<%=goodsNo%>">처음페이지</a> 
+							</li>
+							<li class="page-item">
+								<a class="page-link" href="/shop/emp/goodsOne.jsp?<%=currentPage-1%>&goodsNo=<%=goodsNo%>">이전페이지</a> 
+							</li>
+						<%
+							} else {
+						%>
+							<li class="page-item disabled">
+								<a class="page-link" href="/shop/emp/goodsOne.jsp?currentPage=1&goodsNo=<%=goodsNo%>">처음페이지</a> 
+							</li>
+							<li class="page-item disabled">
+								<a class="page-link" href="/shop/emp/goodsOne.jsp?<%=currentPage-1%>&goodsNo=<%=goodsNo%>">이전페이지</a> 
+							</li>
+						<%		
+							} if (currentPage < lastPage) {
+						%>
+							<li class="page-item">
+								<a class="page-link" href="/shop/emp/goodsOne.jsp?currentPage=<%=currentPage+1%>&goodsNo=<%=goodsNo%>">다음페이지</a> 
+							</li>
+							<li class="page-item">
+								<a class="page-link" href="/shop/emp/goodsOne.jsp?currentPage=<%=lastPage%>&goodsNo=<%=goodsNo%>">마지막페이지</a> 
+							</li>
+						<% 		
+							}
+						%>
+						</ul>
+					</nav>         
                     </div>
                 </div>
             </div>

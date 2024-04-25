@@ -71,7 +71,10 @@
 		.font {
 			font-family:'TTHakgyoansimMonggeulmonggeulR';
 		}
-			
+		
+		 button[type="submit"]:hover {
+            background-color: #A6A6A6;
+        }	
 	</style>
 </head>
 <body class="container font">
@@ -111,7 +114,7 @@
 					HashMap<String, Object> sm = (HashMap<String, Object>)(session.getAttribute("loginEmp"));
 						if((Integer)(sm.get("grade")) > 0) {
 					%>
-					<a href='/shop/emp/modifyEmpActive.jsp?active=<%=(String)(m.get("active")) %>&empId=<%=(String)(m.get("empId"))%>'>
+					<a href='/shop/emp/modifyEmpActive.jsp?active=<%=(String)(m.get("active")) %>&empId=<%=(String)(m.get("empId"))%>' class="btn btn-dark">
 						<%=(String)(m.get("active"))%>
 					</a>
 					<% 

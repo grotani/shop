@@ -62,7 +62,7 @@
 			<tr>
 				<td><%=(String)(m.get("category"))%></td>
 				<td><%=(String)(m.get("createDate"))%></td>
-				<td><a href="/shop/emp/deleteCategoryAction.jsp?category=<%=m.get("category") %>">삭제</a></td>
+				<td><a href="/shop/emp/deleteCategoryAction.jsp?category=<%=m.get("category") %>" class="btn btn-dark">삭제</a></td>
 			</tr>
 		<% 		
 			}
@@ -72,7 +72,7 @@
 		<table>
 			<tr>
 				<td>category </td>
-				<td><input type="text" name="category">&nbsp;<button type="submit">추가하기</button></td>
+				<td><input type="text" name="category">&nbsp;<button type="submit" class="btn btn-dark">추가하기</button></td>
 				
 			</tr>
 		</table>
