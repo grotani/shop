@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.naming.spi.DirStateFactory.Result;
+
 
 public class CustomerDAO {
 	// 회원가입 메일 중복확인 
@@ -67,6 +69,24 @@ public class CustomerDAO {
 		return map;
 		
 	}
+	// 비밀번호 변경시 중복 확인 
+	// 호출 : cpwCheckAction.jsp 
+	// return : boolean (true 사용가능 , false 사용불가능 )
+	public static boolean checkPw(String mail, String pw) throws Exception {
+		boolean result = false;
+		Connection conn = DBHelper.getConnection();
+		String sql = "SELECT * FROM cpw_history WHERE mail = ? AND pw = PASSWORD(?)";
+		PreparedStatement stmt = conn.prepareStatement(sql);
+		stmt.setString(1, mail);
+		stmt.setString(2, pw);
+		ResultSet rs = stmt.executeQuery();
+		if(!rs.next()) {
+			result = true;
+		}
+		conn.close();
+		return result;
+	}
+	
 	
 	// 비밀번호 변경
 	// 호출 : editPwAction.jsp
@@ -84,6 +104,8 @@ public class CustomerDAO {
 		conn.close();
 		return row;
 	}
+	
+	 
 	
 	// 회원정보 보여주기
 	// 호출 : customerOne.jsp

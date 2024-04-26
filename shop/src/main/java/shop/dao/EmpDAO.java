@@ -28,20 +28,37 @@ public class EmpDAO {
 	   public static HashMap<String, Object> empLogin(String empId, String empPw)
 	                                       throws Exception {
 	      HashMap<String, Object> resultMap = null;
-	      
+	      System.out.println(empId + "dao아이디");
+	      System.out.println(empPw + "pw");
+
 	      Connection conn = DBHelper.getConnection();
 	      
-	      String sql = "select emp_id empId, emp_name empName, grade from emp where active = 'ON' and emp_id =? and emp_pw = password(?)";
+	      /*String sql = "select emp_id empId, emp_name empName, grade from emp where active = 'ON' and emp_id =? and emp_pw = password(?)";*/
+	      String sql ="SELECT t.empId, t.eName, t.grade"
+	      		+ " FROM"
+	      		+ " (SELECT e.emp_id empId, e.emp_name eName, e.grade, ph.emp_pw empPw, ph.createdate"
+	      		+ " FROM emp e INNER JOIN epw_history ph"
+	      		+ " ON e.emp_id = ph.emp_id"
+	      		+ " WHERE e.emp_id = ?"
+	      		+ " ORDER BY createdate DESC"
+	      		+ " LIMIT 0,1) t"
+	      		+ " WHERE t.empPw = PASSWORD(?)";
+	    		    		    	    		 	 
 	      PreparedStatement stmt=conn.prepareStatement(sql);
 	      stmt.setString(1,empId);
 	      stmt.setString(2,empPw);
 	      ResultSet rs = stmt.executeQuery();
+	      System.out.println(stmt + "stmt");
 	      if(rs.next()) {
 	         resultMap = new HashMap<String, Object>();
+	         System.out.println(rs.getString("empId") + "empId");
+	         System.out.println(rs.getString("eName") + "eName");
+	         System.out.println(rs.getString("grade") + "grade");
 	         resultMap.put("empId", rs.getString("empId"));
-	         resultMap.put("empName", rs.getString("empName"));
+	         resultMap.put("empName", rs.getString("eName"));
 	         resultMap.put("grade", rs.getInt("grade"));
 	      }
+	      System.out.println(resultMap + "resultMap");
 	      conn.close();
 	      return resultMap;
 	   }

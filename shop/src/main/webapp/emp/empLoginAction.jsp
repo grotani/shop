@@ -16,6 +16,8 @@
 	// 요청값 분석 =>  controller
 	String empId = request.getParameter("empId");
 	String empPw = request.getParameter("empPw");
+	System.out.println(empId + "아이디");
+	System.out.println(empPw + "pw");
 	
 	
 	// 모델 호출하는 코드 
