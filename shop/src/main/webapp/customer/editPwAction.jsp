@@ -25,7 +25,7 @@
 	System.out.println(newPw + "<==newPw");
 	
 	
-	int row = CustomerDAO.updatePw(mail, oldPw, newPw);
+	int row = CustomerDAO.updatePw(mail, newPw);
 	
 	if(row == 1){//수정 성공
 		System.out.println("비밀번호변경");

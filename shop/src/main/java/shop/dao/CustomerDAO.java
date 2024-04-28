@@ -48,14 +48,40 @@ public class CustomerDAO {
 		conn.close();
 		return row;
 	}
-	
+	// 회원가입시 고객 pw테이블 이력적재 추후 pw변경시 기존 pw 재사용 불가를 위한
+	// 호출 : addCustomerAction.jsp
+	// return : int 
+	public static int inertCustompw(String mail, String pw) throws Exception {
+		int row = 0;
+		Connection conn = DBHelper.getConnection();
+		String sql = "INSERT INTO cpw_history(mail, pw, createdate)"
+				+ " VALUES(?, PASSWORD(?), NOW())";
+		PreparedStatement stmt = conn.prepareStatement(sql);
+		stmt.setString(1, mail);
+		stmt.setString(2, pw);
+		row = stmt.executeUpdate();
+		
+		conn.close();
+		return row;
+				 
+	}
 	// 로그인 
 	// 호출 : loginAction.jsp
 	// return : HashMap(메일,이름) 
 	public static HashMap<String, String> login (String mail, String pw) throws Exception {
 		HashMap<String, String> map = null;
 		Connection conn = DBHelper.getConnection();
-		String sql ="select mail,name from customer where mail = ? and pw = password(?)";
+		/*String sql ="select mail,name from customer where mail = ? and pw = password(?)";*/
+		String sql = "SELECT c.mail, c.name"
+				+ " FROM"
+				+ " (SELECT c.mail, c.name, ph.pw, ph.createdate"
+				+ " FROM customer c INNER JOIN cpw_history ph"
+				+ " ON c.mail = ph.mail"
+				+ " WHERE c.mail= ?"
+				+ " ORDER BY ph.createdate DESC"
+				+ " LIMIT 0,1) c"
+				+ " WHERE c.pw= PASSWORD(?)";
+		
 		PreparedStatement stmt = conn.prepareStatement(sql);
 		stmt.setString(1, mail);
 		stmt.setString(2, pw);
@@ -75,7 +101,7 @@ public class CustomerDAO {
 	public static boolean checkPw(String mail, String pw) throws Exception {
 		boolean result = false;
 		Connection conn = DBHelper.getConnection();
-		String sql = "SELECT * FROM cpw_history WHERE mail = ? AND pw = PASSWORD(?)";
+	    String sql = "SELECT * FROM cpw_history WHERE mail = ? AND pw = PASSWORD(?)";
 		PreparedStatement stmt = conn.prepareStatement(sql);
 		stmt.setString(1, mail);
 		stmt.setString(2, pw);
@@ -91,14 +117,16 @@ public class CustomerDAO {
 	// 비밀번호 변경
 	// 호출 : editPwAction.jsp
 	// return : int(1,성공 , 0 실패)
-	public static int updatePw(String mail, String oldPw, String newPw) throws Exception {
+	public static int updatePw(String mail, String newPw) throws Exception {
 		int row = 0;
 		Connection conn = DBHelper.getConnection();
-		String sql = "update customer  set pw = password(?), update_date = now()  where mail = ? and pw = password(?)"; 
+		/*String sql = "update customer  set pw = password(?), update_date = now()  where mail = ? and pw = password(?)";*/ 
+		String sql = "INSERT INTO cpw_history(mail, pw, createdate"
+				+ " VALUES(?,PASSWORD(?), NOW())";
+				
 		PreparedStatement stmt = conn.prepareStatement(sql);
-		stmt.setString(1, newPw);
-		stmt.setString(2, mail);
-		stmt.setString(3, oldPw);
+		stmt.setString(1, mail);
+		stmt.setString(2, newPw);		
 		row = stmt.executeUpdate();
 		
 		conn.close();
